@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+         #
+#    By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/30 14:15:00 by mabdelsa          #+#    #+#              #
-#    Updated: 2024/03/30 14:32:40 by mabdelsa         ###   ########.fr        #
+#    Updated: 2024/04/12 16:17:37 by mahmoud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ SRC	= ./cub3D.c
 NAME = cub3D
 RM = rm -f
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 MLX_FLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
 
 LIBFT_P = ./libft/
@@ -28,11 +28,12 @@ OBJS = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(OBJS): %.o: %.c
+$(NAME): $(OBJS) $(LIBFT_AR) $(MLX_AR)
+	$(CC) $(CFLAGS) $(SRC) $(MLX_FLAGS) $(MLX_AR) $(LIBFT_AR) -o $(NAME)
+	
+%.o: %.c
 	$(CC) $(CFLAGS) -I $(MLX_P) -c $< -o $@
 
-$(NAME): $(OBJS) $(LIBFT_AR) $(MLX_AR)
-	$(CC) $(OBJS) $(MLX_FLAGS) $(MLX_AR) $(LIBFT_AR) -o $(NAME)
 
 $(LIBFT_AR):
 	make -C $(LIBFT_P)
