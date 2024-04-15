@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/04/15 01:27:39 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/04/15 14:04:51 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void draw_map(t_map *map)
 
 void draw_player(t_map *map) {
 
-    int draw_start_x = map->player->x + (map->img_width / 2) - (map->player->width / 2);
-    int draw_start_y = map->player->y + (map->img_height / 2) - (map->player->height / 2);
+    int draw_start_x = map->player->x - (map->player->width / 2);
+    int draw_start_y = map->player->y - (map->player->height / 2);
 
     int x;
     int y;
@@ -93,8 +93,8 @@ void rotate_line(t_map *map, double angle) {
 
 
 void draw_line(t_map *map) {
-    int x0 = map->player->x + (map->img_width / 2);  
-    int y0 = map->player->y + (map->img_height / 2);  
+    int x0 = map->player->x;  
+    int y0 = map->player->y;  
     
     // Calculate endpoint coordinates based on rotation angle
     int x1 = x0 + cos(map->player->rotation_angle) * 40;  
@@ -128,8 +128,8 @@ void draw_line(t_map *map) {
 
 int check_wall_index(t_map *map, double x, double y)
 {
-    int next_x = (floor(x) / 64);
-    int next_y = (floor(y) / 64);
+    int next_x = floor(x / 64);
+    int next_y = floor(y / 64);
 
     if (map->map[next_y][next_x] == '1')
         return (1);
@@ -150,16 +150,16 @@ void move_player(t_map *map, int direction)
     double dx = cos(map->player->rotation_angle) * move_step;
     double dy = -sin(map->player->rotation_angle) * move_step;
 
-//    printf("OLD position: (%f, %f)\n", (dx /64), (dy/64));
+   printf("OLD position: (%f, %f)\n", (map->player->x /64), (map->player->y/64));
 
     // Update player position based on direction
-    if (check_wall_index(map, map->player->x, map->player->y) == 0)
+    if (check_wall_index(map, map->player->x + dx, map->player->y + dy) == 0)
     {
-        map->player->x += dx; 
-        map->player->y += dy; 
+        map->player->x += dx;
+        map->player->y += dy;
     }
 
-    // printf("New position: (%f, %f)\n", (map->player->x / 64), (map->player->y / 64));
+    printf("New position: (%f, %f)\n", (floor((map->player->x + dx )/ 64)), (floor((map->player->y + dy)/ 64)));
 }
 
 
@@ -245,7 +245,7 @@ void init_values(t_map *map)
     map->player->turn_direction = 0;
     map->player->walk_direction = 0;
     map->player->rotation_angle = PI / 2;
-    map->player->walk_speed = 10;
+    map->player->walk_speed = 5;
     map->player->turn_speed = 15 * (PI / 180);
 }
 
@@ -255,8 +255,8 @@ int	main(void)
     init_values(&map);
     assign_images(&map);
     init_map(&map);
-    map.player->x = 3 * map.img_width;
-    map.player->y = 2 * map.img_height;
+    map.player->x = 3 * map.img_width + map.img_width / 2;
+    map.player->y = 2 * map.img_height + map.img_height / 2;
     create_minimap(&map);
     return (0);
 }
