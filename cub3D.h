@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/04/15 13:28:59 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/04/21 20:34:47 by mahmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,29 @@
 # include "./mlx/mlx.h"
 # include <math.h>
 # include <stdio.h>
+# include <stdbool.h>
 
 # define PI M_PI
 # define TWO_PI 2 * M_PI
 # define FOV 60 * (PI / 180)
+#define FALSE 0
+#define TRUE 1
+// # define TILE_SIZE 64
+
+
+typedef struct s_ray
+{
+	double ray_angle;
+	double wall_hit_x;
+	double wall_hit_y;
+	double distance;
+	int	was_hit_vertical;
+	int is_ray_facing_up;
+	int is_ray_facing_down;
+	int is_ray_facing_left;
+	int is_ray_facing_right;
+	int wall_hit_content;
+}				t_ray;
 
 typedef struct s_player
 {
@@ -33,6 +52,7 @@ typedef struct s_player
 	double		rotation_angle;
 	double		walk_speed;
 	double		turn_speed;
+	t_ray		**ray;
 }				t_player;
 
 typedef struct s_map
