@@ -6,7 +6,7 @@
 /*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/04/29 19:25:40 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/04/29 19:42:59 by mahmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void normalize_angle(double *angle)
 
 void rotate_line(t_map *map, double angle) {
     map->player->turn_direction = angle;
-    map->player->rotation_angle -= map->player->turn_direction * map->player->turn_speed; // Subtract instead of add
+    map->player->rotation_angle += map->player->turn_direction * map->player->turn_speed; // Subtract instead of add
     
     // Normalize rotation angle to keep it within 0 to 2 * PI
     normalize_angle(&map->player->rotation_angle);
@@ -385,11 +385,11 @@ int perform_action(int keycode, t_map *map)
         destroy_window(map);
     else if (keycode == 123) // Left arrow key
     {
-       rotate_line(map, -1); // Rotate counterclockwise map->player->turn_direction = -1
+       rotate_line(map, 1); // Rotate counterclockwise map->player->turn_direction = -1
     }
     else if (keycode == 124) // Right arrow key
     {
-        rotate_line(map, 1); // Rotate clockwise map->player->walk_direction = 1
+        rotate_line(map, -1); // Rotate clockwise map->player->walk_direction = 1
     }
     else if (keycode == 126) // Up arrow key
     {
