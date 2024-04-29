@@ -22,10 +22,10 @@ relocations:
   - { offsetInCU: 0x484, offset: 0x484, size: 0x8, addend: 0x0, symName: _render_rays, symObjAddr: 0x232C, symBinAddr: 0x1000058A0, symSize: 0x2D0 }
   - { offsetInCU: 0x4B6, offset: 0x4B6, size: 0x8, addend: 0x0, symName: _distance_between_points, symObjAddr: 0x25FC, symBinAddr: 0x100005B70, symSize: 0x27C }
   - { offsetInCU: 0x4FA, offset: 0x4FA, size: 0x8, addend: 0x0, symName: _cast_ray, symObjAddr: 0x2878, symBinAddr: 0x100005DEC, symSize: 0x1F4C }
-  - { offsetInCU: 0x720, offset: 0x720, size: 0x8, addend: 0x0, symName: _cast_all_rays, symObjAddr: 0x47C4, symBinAddr: 0x100007D38, symSize: 0x1EC }
-  - { offsetInCU: 0x764, offset: 0x764, size: 0x8, addend: 0x0, symName: _perform_action, symObjAddr: 0x49B0, symBinAddr: 0x100007F24, symSize: 0x4F0 }
-  - { offsetInCU: 0x79D, offset: 0x79D, size: 0x8, addend: 0x0, symName: _create_minimap, symObjAddr: 0x4EA0, symBinAddr: 0x100008414, symSize: 0x3FC }
-  - { offsetInCU: 0x7C3, offset: 0x7C3, size: 0x8, addend: 0x0, symName: _init_map, symObjAddr: 0x529C, symBinAddr: 0x100008810, symSize: 0x3A4 }
-  - { offsetInCU: 0x839, offset: 0x839, size: 0x8, addend: 0x0, symName: _init_values, symObjAddr: 0x5640, symBinAddr: 0x100008BB4, symSize: 0xDB0 }
-  - { offsetInCU: 0x86E, offset: 0x86E, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x63F0, symBinAddr: 0x100009964, symSize: 0x518 }
+  - { offsetInCU: 0x70E, offset: 0x70E, size: 0x8, addend: 0x0, symName: _cast_all_rays, symObjAddr: 0x47C4, symBinAddr: 0x100007D38, symSize: 0x1EC }
+  - { offsetInCU: 0x752, offset: 0x752, size: 0x8, addend: 0x0, symName: _perform_action, symObjAddr: 0x49B0, symBinAddr: 0x100007F24, symSize: 0x4F0 }
+  - { offsetInCU: 0x78B, offset: 0x78B, size: 0x8, addend: 0x0, symName: _create_minimap, symObjAddr: 0x4EA0, symBinAddr: 0x100008414, symSize: 0x3FC }
+  - { offsetInCU: 0x7B1, offset: 0x7B1, size: 0x8, addend: 0x0, symName: _init_map, symObjAddr: 0x529C, symBinAddr: 0x100008810, symSize: 0x3A4 }
+  - { offsetInCU: 0x827, offset: 0x827, size: 0x8, addend: 0x0, symName: _init_values, symObjAddr: 0x5640, symBinAddr: 0x100008BB4, symSize: 0xDB0 }
+  - { offsetInCU: 0x85C, offset: 0x85C, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x63F0, symBinAddr: 0x100009964, symSize: 0x518 }
 ...
