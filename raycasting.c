@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:23:40 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/04/30 15:47:38 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/04/30 16:19:07 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	horizontal_intercept_loop(t_map *map, int i, double next_horz_touch_x,
 			// found a wall hit
 			map->player->ray[i]->horz_wall_hit_x = next_horz_touch_x;
 			map->player->ray[i]->horz_wall_hit_y = next_horz_touch_y;
-			map->player->ray[i]->found_horz_wall_hit = TRUE;
+			map->player->ray[i]->found_horz_wall_hit = 1;
 			break ;
 		}
 		else
@@ -78,7 +78,7 @@ void	vertical_intercept_loop(t_map *map, int i, double next_vert_touch_x,
 			// found a wall hit
 			map->player->ray[i]->vert_wall_hit_x = next_vert_touch_x;
 			map->player->ray[i]->vert_wall_hit_y = next_vert_touch_y;
-			map->player->ray[i]->found_vert_wall_hit = TRUE;
+			map->player->ray[i]->found_vert_wall_hit = 1;
 			break ;
 		}
 		else
@@ -107,9 +107,7 @@ void	find_horz_intercept(t_map *map, double rayAngle, int i)
 		map->player->ray[i]->ystep *= -1;
 	map->player->ray[i]->xstep = TILE_SIZE / tan(-rayAngle);
 	// Invert rotation here
-	if ((map->player->ray[i]->is_facing_left && map->player->ray[i]->xstep > 0)
-		|| (map->player->ray[i]->is_facing_right
-			&& map->player->ray[i]->xstep < 0))
+	if ((map->player->ray[i]->is_facing_left && map->player->ray[i]->xstep > 0))
 		map->player->ray[i]->xstep *= -1;
 	next_horz_touch_x = map->player->ray[i]->xint;
 	next_horz_touch_y = map->player->ray[i]->yint;
@@ -144,6 +142,7 @@ void	find_vertical_intercept(t_map *map, double rayAngle, int i)
 	// Increment map->player->ray[i]->xstep and map->player->ray[i]->ystep until we find a wall
 	vertical_intercept_loop(map, i, next_vert_touch_x, next_vert_touch_y);
 }
+
 
 void	wall_hit_direction(t_map *map, int i)
 {
