@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/04/21 20:34:47 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/04/30 13:21:32 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define FOV 60 * (PI / 180)
 #define FALSE 0
 #define TRUE 1
-// # define TILE_SIZE 64
+# define TILE_SIZE 64
 
 
 typedef struct s_ray
@@ -39,6 +39,11 @@ typedef struct s_ray
 	int is_ray_facing_left;
 	int is_ray_facing_right;
 	int wall_hit_content;
+	int is_north_wall;
+	int is_south_wall;
+	int is_east_wall;
+	int is_west_wall;
+
 }				t_ray;
 
 typedef struct s_player

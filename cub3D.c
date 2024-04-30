@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/04/29 19:42:59 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/04/30 13:22:44 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void draw_map(t_map *map)
         y++;
     }
 }
+
 
 void draw_player(t_map *map) {
 
@@ -171,12 +172,6 @@ void move_player(t_map *map, int direction)
     printf("New position: (%f, %f)\n", (floor((map->player->x + dx )/ 64)), (floor((map->player->y + dy)/ 64)));
 }
 
-
-
-
-
-
-
 void draw_line_rays(t_map *map, double x1, double y1) {
     int x0 = map->player->x;  
     int y0 = map->player->y;  
@@ -227,8 +222,8 @@ double distance_between_points(t_map *map, double x2, double y2)
 void cast_ray(t_map *map, double rayAngle, int stripId) {
 
     int window_width, window_height;
-    window_width = map->map_width * 64;
-    window_height = map->map_height * 64;
+    window_width = map->map_width * TILE_SIZE;
+    window_height = map->map_height * TILE_SIZE;
     normalize_angle(&rayAngle);
     
     int isRayFacingUp = rayAngle > 0 && rayAngle < PI;
@@ -249,17 +244,17 @@ void cast_ray(t_map *map, double rayAngle, int stripId) {
     int horzWallContent = 0;
 
     // Find the y-coordinate of the closest horizontal grid intersection
-    yintercept = floor(map->player->y / 64) * 64;
-    yintercept += isRayFacingDown ? 64 : 0;
+    yintercept = floor(map->player->y / TILE_SIZE) * TILE_SIZE;
+    yintercept += isRayFacingDown ? TILE_SIZE : 0;
 
     // Find the x-coordinate of the closest horizontal grid intersection
     xintercept = map->player->x + (yintercept - map->player->y) / tan(-rayAngle); // Invert rotation here
 
     // Calculate the increment xstep and ystep
-    ystep = 64;
+    ystep = TILE_SIZE;
     ystep *= isRayFacingUp ? -1 : 1;
 
-    xstep = 64 / tan(-rayAngle); // Invert rotation here
+    xstep = TILE_SIZE / tan(-rayAngle); // Invert rotation here
     xstep *= (isRayFacingLeft && xstep > 0) ? -1 : 1;
     xstep *= (isRayFacingRight && xstep < 0) ? -1 : 1;
 
@@ -293,17 +288,17 @@ void cast_ray(t_map *map, double rayAngle, int stripId) {
     int vertWallContent = 0;
 
     // Find the x-coordinate of the closest vertical grid intersection
-    xintercept = floor(map->player->x / 64) * 64;
-    xintercept += isRayFacingRight ? 64 : 0;
+    xintercept = floor(map->player->x / TILE_SIZE) * TILE_SIZE;
+    xintercept += isRayFacingRight ? TILE_SIZE : 0;
 
     // Find the y-coordinate of the closest vertical grid intersection
     yintercept = map->player->y + (xintercept - map->player->x) * tan(-rayAngle); // Invert rotation here
 
     // Calculate the increment xstep and ystep
-    xstep = 64;
+    xstep = TILE_SIZE;
     xstep *= isRayFacingLeft ? -1 : 1;
 
-    ystep = 64 * tan(-rayAngle); // Invert rotation here
+    ystep = TILE_SIZE * tan(-rayAngle); // Invert rotation here
     ystep *= (isRayFacingUp && ystep > 0) ? -1 : 1;
     ystep *= (isRayFacingDown && ystep < 0) ? -1 : 1;
 
@@ -341,26 +336,38 @@ void cast_ray(t_map *map, double rayAngle, int stripId) {
         map->player->ray[stripId]->wall_hit_x = vertWallHitX;
         map->player->ray[stripId]->wall_hit_y = vertWallHitY;
         map->player->ray[stripId]->wall_hit_content = vertWallContent;
-        map->player->ray[stripId]->was_hit_vertical = TRUE;
+        map->player->ray[stripId]->was_hit_vertical = 1;
     } else {
         map->player->ray[stripId]->distance = horzHitDistance;
         map->player->ray[stripId]->wall_hit_x = horzWallHitX;
         map->player->ray[stripId]->wall_hit_y = horzWallHitY;
         map->player->ray[stripId]->wall_hit_content = horzWallContent;
-        map->player->ray[stripId]->was_hit_vertical = FALSE;
+        map->player->ray[stripId]->was_hit_vertical = 0;
     }
     map->player->ray[stripId]->ray_angle = rayAngle;
     map->player->ray[stripId]->is_ray_facing_down = isRayFacingDown;
     map->player->ray[stripId]->is_ray_facing_up = isRayFacingUp;
     map->player->ray[stripId]->is_ray_facing_left = isRayFacingLeft;
     map->player->ray[stripId]->is_ray_facing_right = isRayFacingRight;
+    
+
+
+    map->player->ray[stripId]->is_north_wall = 0;
+    map->player->ray[stripId]->is_south_wall = 0;
+    map->player->ray[stripId]->is_east_wall = 0;
+    map->player->ray[stripId]->is_west_wall = 0;
+
+    if (isRayFacingUp && map->player->ray[stripId]->was_hit_vertical == 0)
+        map->player->ray[stripId]->is_north_wall = 1;
+    else if (isRayFacingDown && map->player->ray[stripId]->was_hit_vertical == 0)
+        map->player->ray[stripId]->is_south_wall = 1;
+    else if (isRayFacingRight && map->player->ray[stripId]->was_hit_vertical == 1)
+        map->player->ray[stripId]->is_east_wall = 1;
+    else if (isRayFacingLeft && map->player->ray[stripId]->was_hit_vertical == 1)
+        map->player->ray[stripId]->is_west_wall = 1;
 }
 
 
-
-
-
-//////////////////////////////////////////
 
 
 
@@ -373,7 +380,8 @@ void cast_all_rays(t_map *map)
     while (i < map->no_of_rays)
     {
         cast_ray(map, ray_angle, i);
-        ray_angle += FOV / map->no_of_rays;
+        printf("Ray ID: %d Wall Hit: %d %d% d% d\n", i, map->player->ray[i]->is_north_wall,  map->player->ray[i]->is_south_wall,  map->player->ray[i]->is_east_wall,  map->player->ray[i]->is_west_wall);
+        ray_angle += FOV / map->no_of_rays ;
         i++;
     }
 }
@@ -459,7 +467,7 @@ void init_values(t_map *map)
     map->img_height = 64;
     map->img_width = 64;
     map->player = ft_calloc(sizeof(t_player), 1);
-    map->no_of_rays = map->map_width * map->img_width;
+    map->no_of_rays = (map->map_width * map->img_width) / 50; //ray per how many pixels;
     map->player->ray = malloc(sizeof(t_ray *) * map->no_of_rays); // Allocate memory for the array of t_ray pointers
     if (map->player->ray == NULL) {
         // Handle memory allocation failure
