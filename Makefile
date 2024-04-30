@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+         #
+#    By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/30 14:15:00 by mabdelsa          #+#    #+#              #
-#    Updated: 2024/04/12 16:17:37 by mahmoud          ###   ########.fr        #
+#    Updated: 2024/04/30 13:28:13 by mabdelsa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC	= ./cub3D.c
+SRC	= ./cub3D.c ./raycasting.c \
 
 NAME = cub3D
 RM = rm -f

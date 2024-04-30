@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/04/30 13:21:32 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/04/30 15:48:46 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,25 @@ typedef struct s_ray
 	double wall_hit_x;
 	double wall_hit_y;
 	double distance;
+	double xint;
+	double yint;
+	double xstep;
+	double ystep;
+	double horz_wall_hit_x;
+	double horz_wall_hit_y;
+	double vert_wall_hit_x;
+	double vert_wall_hit_y;
 	int	was_hit_vertical;
-	int is_ray_facing_up;
-	int is_ray_facing_down;
-	int is_ray_facing_left;
-	int is_ray_facing_right;
-	int wall_hit_content;
+	int is_facing_up;
+	int is_facing_down;
+	int is_facing_left;
+	int is_facing_right;
 	int is_north_wall;
 	int is_south_wall;
 	int is_east_wall;
 	int is_west_wall;
-
+	int found_horz_wall_hit;
+	int found_vert_wall_hit;
 }				t_ray;
 
 typedef struct s_player
@@ -67,6 +75,8 @@ typedef struct s_map
 	char		map[7][7];
 	int			map_width;
 	int			map_height;
+	int			window_width;
+	int			window_height;
 	int			no_of_rays;
 	int			img_width;
 	int			img_height;
@@ -75,3 +85,9 @@ typedef struct s_map
 }				t_map;
 
 #endif
+
+void normalize_angle(double *angle);
+double distance_between_points(t_map *map, double x2, double y2);
+int check_wall_index(t_map *map, double x, double y);
+void cast_all_rays(t_map *map);
+
