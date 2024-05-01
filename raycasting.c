@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:23:40 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/04/30 16:19:07 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:42:13 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,28 +94,28 @@ void	find_horz_intercept(t_map *map, double rayAngle, int i)
 	double	next_horz_touch_x;
 	double	next_horz_touch_y;
 
-	// Find the y-coordinate of the closest horizontal grid intersection
 	map->player->ray[i]->yint = floor(map->player->y / TILE_SIZE) * TILE_SIZE;
 	if (map->player->ray[i]->is_facing_down)
 		map->player->ray[i]->yint += TILE_SIZE;
 	// Find the x-coordinate of the closest horizontal grid intersection
 	map->player->ray[i]->xint = map->player->x + (map->player->ray[i]->yint
 			- map->player->y) / tan(-rayAngle); // Invert rotation here
-	// Calculate the increment map->player->ray[i]->xstep and map->player->ray[i]->ystep
+	// Calculate the increment xstep and ystep
 	map->player->ray[i]->ystep = TILE_SIZE;
 	if (map->player->ray[i]->is_facing_up)
 		map->player->ray[i]->ystep *= -1;
 	map->player->ray[i]->xstep = TILE_SIZE / tan(-rayAngle);
 	// Invert rotation here
-	if ((map->player->ray[i]->is_facing_left && map->player->ray[i]->xstep > 0))
+	if (map->player->ray[i]->is_facing_left && map->player->ray[i]->xstep > 0)
+		map->player->ray[i]->xstep *= -1;
+	if (map->player->ray[i]->is_facing_right && map->player->ray[i]->xstep < 0)
 		map->player->ray[i]->xstep *= -1;
 	next_horz_touch_x = map->player->ray[i]->xint;
 	next_horz_touch_y = map->player->ray[i]->yint;
-	// Increment map->player->ray[i]->xstep and map->player->ray[i]->ystep until we find a wall
 	horizontal_intercept_loop(map, i, next_horz_touch_x, next_horz_touch_y);
 }
 
-void	find_vertical_intercept(t_map *map, double rayAngle, int i)
+void	find_vert_intercept(t_map *map, double rayAngle, int i)
 {
 	double	next_vert_touch_x;
 	double	next_vert_touch_y;
@@ -143,7 +143,6 @@ void	find_vertical_intercept(t_map *map, double rayAngle, int i)
 	vertical_intercept_loop(map, i, next_vert_touch_x, next_vert_touch_y);
 }
 
-
 void	wall_hit_direction(t_map *map, int i)
 {
 	if (map->player->ray[i]->is_facing_up
@@ -160,31 +159,45 @@ void	wall_hit_direction(t_map *map, int i)
 		map->player->ray[i]->is_west_wall = 1;
 }
 
-void	calculate_distance(t_map *map, double rayAngle, int i)
+void	choose_intercept(t_map *map, double vertHitDistance,
+		double horzHitDistance, int i)
 {
-	double	horz_hit_distance;
-	double	vert_hit_distance;
-
-	horz_hit_distance = distance_between_points(map,
-			map->player->ray[i]->horz_wall_hit_x,
-			map->player->ray[i]->horz_wall_hit_y);
-	vert_hit_distance = distance_between_points(map,
-			map->player->ray[i]->vert_wall_hit_x,
-			map->player->ray[i]->vert_wall_hit_y);
-	if (vert_hit_distance < horz_hit_distance)
+	if (vertHitDistance < horzHitDistance)
 	{
-		map->player->ray[i]->distance = vert_hit_distance;
+		map->player->ray[i]->distance = vertHitDistance;
 		map->player->ray[i]->wall_hit_x = map->player->ray[i]->vert_wall_hit_x;
 		map->player->ray[i]->wall_hit_y = map->player->ray[i]->vert_wall_hit_y;
 		map->player->ray[i]->was_hit_vertical = 1;
 	}
 	else
 	{
-		map->player->ray[i]->distance = horz_hit_distance;
+		map->player->ray[i]->distance = horzHitDistance;
 		map->player->ray[i]->wall_hit_x = map->player->ray[i]->horz_wall_hit_x;
 		map->player->ray[i]->wall_hit_y = map->player->ray[i]->horz_wall_hit_y;
 		map->player->ray[i]->was_hit_vertical = 0;
 	}
+}
+
+void	calculate_distance(t_map *map, double rayAngle, int i)
+{
+	double	horz_hit_distance;
+	double	vert_hit_distance;
+
+	horz_hit_distance = INT_MAX;
+	vert_hit_distance = INT_MAX;
+	if (map->player->ray[i]->found_vert_wall_hit)
+	{
+		horz_hit_distance = distance_between_points(map,
+				map->player->ray[i]->horz_wall_hit_x,
+				map->player->ray[i]->horz_wall_hit_y);
+	}
+	if (map->player->ray[i]->found_vert_wall_hit)
+	{
+		vert_hit_distance = distance_between_points(map,
+				map->player->ray[i]->vert_wall_hit_x,
+				map->player->ray[i]->vert_wall_hit_y);
+	}
+	choose_intercept(map, vert_hit_distance, horz_hit_distance, i);
 	map->player->ray[i]->ray_angle = rayAngle;
 	wall_hit_direction(map, i);
 }
@@ -194,7 +207,7 @@ void	cast_ray(t_map *map, double rayAngle, int i)
 	normalize_angle(&rayAngle);
 	ray_inits(map, rayAngle, i);
 	find_horz_intercept(map, rayAngle, i);
-	find_vertical_intercept(map, rayAngle, i);
+	find_vert_intercept(map, rayAngle, i);
 	calculate_distance(map, rayAngle, i);
 }
 
