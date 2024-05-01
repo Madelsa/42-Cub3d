@@ -6,11 +6,11 @@
 #    By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/30 14:15:00 by mabdelsa          #+#    #+#              #
-#    Updated: 2024/04/30 13:28:13 by mabdelsa         ###   ########.fr        #
+#    Updated: 2024/05/01 16:42:16 by mabdelsa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC	= ./cub3D.c ./raycasting.c \
+SRC	= ./cub3D.c ./raycasting.c ./raycasting2.c \
 
 NAME = cub3D
 RM = rm -f

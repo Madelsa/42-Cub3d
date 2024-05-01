@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/04/30 15:48:46 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/01 16:41:25 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,9 @@ void normalize_angle(double *angle);
 double distance_between_points(t_map *map, double x2, double y2);
 int check_wall_index(t_map *map, double x, double y);
 void cast_all_rays(t_map *map);
-
+void	find_horz_intercept(t_map *map, double rayAngle, int i);
+void	find_vert_intercept(t_map *map, double rayAngle, int i);
+void	wall_hit_direction(t_map *map, int i);
+void	choose_intercept(t_map *map, double vertHitDistance,
+		double horzHitDistance, int i);
+void	calculate_distance(t_map *map, double rayAngle, int i);
