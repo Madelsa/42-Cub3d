@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/01 15:06:00 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/07 12:54:08 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void draw_map(t_map *map)
         {
             if (map->map[y][x] == '0')
                 mlx_put_image_to_window(map->mlx_ptr, map->win_ptr, map->textures[0],
-                    (x * map->img_width), (y * map->img_height));
+                    (x * TWO_D_TILE_SIZE), (y * TWO_D_TILE_SIZE));
             else if (map->map[y][x] == '1')
                 mlx_put_image_to_window(map->mlx_ptr, map->win_ptr, map->textures[1],
-                    (x * map->img_width), (y * map->img_height));
+                    (x * TWO_D_TILE_SIZE), (y * TWO_D_TILE_SIZE));
             x++;
         }
         y++;
@@ -63,9 +63,9 @@ void draw_player(t_map *map) {
 int assign_images(t_map *map)
 {
     map->textures[0] = mlx_xpm_file_to_image(map->mlx_ptr,
-            "./textures/white_square.xpm", &map->img_width , &map->img_height);
+            "./textures/white_square_10.xpm", &map->img_width , &map->img_height);
     map->textures[1] = mlx_xpm_file_to_image(map->mlx_ptr,
-            "./textures/black_square.xpm", &map->img_width, &map->img_height);
+            "./textures/black_square_10.xpm", &map->img_width, &map->img_height);
     if (map->textures[0] == NULL || map->textures[1] == NULL)
         return (1);
     return (0);
@@ -106,8 +106,8 @@ void draw_line(t_map *map) {
     int y0 = map->player->y;  
     
     // Calculate endpoint coordinates based on rotation angle
-    int x1 = x0 + cos(map->player->rotation_angle) * 40;  
-    int y1 = y0 - sin(map->player->rotation_angle) * 40;  
+    int x1 = x0 + cos(map->player->rotation_angle) * 10;  
+    int y1 = y0 - sin(map->player->rotation_angle) * 10;  
 
     int dx = x1 - x0;  
     int dy = y1 - y0;  
@@ -137,8 +137,8 @@ void draw_line(t_map *map) {
 
 int check_wall_index(t_map *map, double x, double y)
 {
-    int next_x = floor(x / 64);
-    int next_y = floor(y / 64);
+    int next_x = floor(x / TWO_D_TILE_SIZE);
+    int next_y = floor(y / TWO_D_TILE_SIZE);
 
     if (map->map[next_y][next_x] == '1')
         return (1);
@@ -157,7 +157,7 @@ void move_player(t_map *map, int direction)
     double dx = cos(map->player->rotation_angle) * move_step;
     double dy = -sin(map->player->rotation_angle) * move_step;
 
-   printf("OLD position: (%f, %f)\n", (map->player->x /64), (map->player->y/64));
+  
 
     // Update player position based on direction
     if (check_wall_index(map, map->player->x + dx, map->player->y + dy) == 0)
@@ -166,7 +166,6 @@ void move_player(t_map *map, int direction)
         map->player->y += dy;
     }
 
-    printf("New position: (%f, %f)\n", (floor((map->player->x + dx )/ 64)), (floor((map->player->y + dy)/ 64)));
 }
 
 void draw_line_rays(t_map *map, double x1, double y1) {
@@ -380,6 +379,80 @@ double distance_between_points(t_map *map, double x2, double y2)
 // }
 
 
+// void create_3d_walls(t_map *map)
+// {
+//     for (int i = 0; i < map->no_of_rays; i++) {
+//         float perpDistance = map->player->ray[i]->distance * cos(map->player->ray[i]->ray_angle - map->player->rotation_angle);
+//         float distanceProjPlane = (WINDOW_WIDTH) / tan(FOV / 2);
+//         float projectedWallHeight = (TWO_D_TILE_SIZE / perpDistance) * distanceProjPlane;
+
+//         int wallStripHeight = (int)projectedWallHeight;
+
+//         int wallTopPixel = (WINDOW_HEIGHT / 2) - (wallStripHeight / 2);
+//         wallTopPixel = wallTopPixel < 0 ? 0 : wallTopPixel;
+
+//         int wallBottomPixel = (WINDOW_HEIGHT / 2) + (wallStripHeight / 2);
+//         wallBottomPixel = wallBottomPixel > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomPixel;
+
+//         // Render the wall from wallTopPixel to wallBottomPixel
+//         for (int y = wallTopPixel; y < wallBottomPixel; y++) {
+//            mlx_pixel_put(map->mlx_ptr, map->win_ptr, i, y, 0xFFFFFF); // Use i as the x-coordinate
+//         }
+//     }
+// }
+
+void create_3d_walls(t_map *map)
+{
+    int bits_per_pixel;
+    int size_line;
+    int endian;
+
+    // Create an off-screen buffer
+    void *buffer = mlx_new_image(map->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
+    if (!buffer) {
+        // Handle error
+        return;
+    }
+
+    // Get the address of the buffer and retrieve image data format information
+    unsigned int *image_data = (unsigned int *)mlx_get_data_addr(buffer, &bits_per_pixel, &size_line, &endian);
+
+    for (int i = 0; i < map->no_of_rays; i++) {
+        float perpDistance = map->player->ray[i]->distance * cos(map->player->ray[i]->ray_angle - map->player->rotation_angle);
+        float distanceProjPlane = (WINDOW_WIDTH) / tan(FOV / 2);
+        float projectedWallHeight = (TWO_D_TILE_SIZE / perpDistance) * distanceProjPlane;
+
+        int wallStripHeight = (int)projectedWallHeight;
+
+        int wallTopPixel = (WINDOW_HEIGHT / 2) - (wallStripHeight / 2);
+        printf("TOP PX: %d\n", wallStripHeight);
+        if (wallStripHeight == 0)
+            printf("distance: %f\n", map->player->ray[i]->distance);
+        wallTopPixel = wallTopPixel < 0 ? 0 : wallTopPixel;
+
+        int wallBottomPixel = (WINDOW_HEIGHT / 2) + (wallStripHeight / 2);
+        wallBottomPixel = wallBottomPixel > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomPixel;
+        // printf("ray id: %d\n", i);
+        // printf("TOP PX: %d\n", wallTopPixel);
+        // printf("BOT PX: %d\n\n", wallBottomPixel);
+        // Render the wall from wallTopPixel to wallBottomPixel
+        for (int y = wallTopPixel; y < wallBottomPixel; y++) {
+            // Store the pixel color in the off-screen buffer
+            if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
+                image_data[y * WINDOW_WIDTH + i] = 0xFFFFFF; // White color
+            }
+        }
+    }
+
+    // Display the off-screen buffer on the window
+    mlx_put_image_to_window(map->mlx_ptr, map->win_ptr, buffer, 0, 0);
+
+    // Destroy the off-screen buffer
+    mlx_destroy_image(map->mlx_ptr, buffer);
+}
+
+
+
 int perform_action(int keycode, t_map *map)
 {
     if (keycode == 53)
@@ -408,7 +481,12 @@ int perform_action(int keycode, t_map *map)
     draw_player(map); // Draw the player
     draw_line(map); // Draw the line
     cast_all_rays(map);
-    render_rays(map);
+    // render_rays(map);
+    create_3d_walls(map);
+    draw_map(map);
+    draw_player(map); // Draw the player
+    draw_line(map); // Draw the line
+
 
 
     return (0);
@@ -417,15 +495,21 @@ int perform_action(int keycode, t_map *map)
 
 void create_minimap(t_map *map)
 {
-    map->win_ptr = mlx_new_window(map->mlx_ptr, map->map_width * map->img_width, 
-        map->map_height * map->img_height, "Cub3d");
+    map->win_ptr = mlx_new_window(map->mlx_ptr, WINDOW_WIDTH , 
+        WINDOW_HEIGHT, "Cub3d");
     if (map->win_ptr == NULL)
         exit(EXIT_FAILURE);
     draw_map(map);
     draw_player(map);
     draw_line(map);
     cast_all_rays(map);
-    render_rays(map);
+    // render_rays(map);
+    create_3d_walls(map);
+    draw_map(map);
+    draw_player(map); // Draw the player
+    draw_line(map); // Draw the line
+
+
     mlx_hook(map->win_ptr, 17, 1L << 17, destroy_window, map);
     mlx_hook(map->win_ptr, 2, 1L << 0, perform_action, map);
     mlx_loop(map->mlx_ptr);
@@ -460,7 +544,7 @@ void init_values(t_map *map)
     map->img_height = 64;
     map->img_width = 64;
     map->player = ft_calloc(sizeof(t_player), 1);
-    map->no_of_rays = (map->map_width * map->img_width) / 20; //ray per how many pixels;
+    map->no_of_rays = WINDOW_WIDTH; //ray per how many pixels;
     map->player->ray = malloc(sizeof(t_ray *) * map->no_of_rays); // Allocate memory for the array of t_ray pointers
     if (map->player->ray == NULL) {
         // Handle memory allocation failure
@@ -477,12 +561,12 @@ void init_values(t_map *map)
     }
     map->player->x = map->map_width / 2;  //update later starting pos
     map->player->y = map->map_height / 2; //update later starting pos
-    map->player->width = 10;
-    map->player->height = 10;
+    map->player->width = 3;
+    map->player->height = 3;
     map->player->turn_direction = 0;
     map->player->walk_direction = 0;
     map->player->rotation_angle = PI / 2;
-    map->player->walk_speed = 10;
+    map->player->walk_speed = 1;
     map->player->turn_speed = 15 * (PI / 180);
 }
 
