@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:23:40 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/01 16:42:54 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/10 03:40:17 by mahmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,17 +75,17 @@ void	find_horz_intercept(t_map *map, double rayAngle, int i)
 	double	next_horz_touch_x;
 	double	next_horz_touch_y;
 
-	map->player->ray[i]->yint = floor(map->player->y / TILE_SIZE) * TILE_SIZE;
+	map->player->ray[i]->yint = floor(map->player->y / TWO_D_TILE_SIZE) * TWO_D_TILE_SIZE;
 	if (map->player->ray[i]->is_facing_down)
-		map->player->ray[i]->yint += TILE_SIZE;
+		map->player->ray[i]->yint += TWO_D_TILE_SIZE;
 	// Find the x-coordinate of the closest horizontal grid intersection
 	map->player->ray[i]->xint = map->player->x + (map->player->ray[i]->yint
 			- map->player->y) / tan(-rayAngle); // Invert rotation here
 	// Calculate the increment xstep and ystep
-	map->player->ray[i]->ystep = TILE_SIZE;
+	map->player->ray[i]->ystep = TWO_D_TILE_SIZE;
 	if (map->player->ray[i]->is_facing_up)
 		map->player->ray[i]->ystep *= -1;
-	map->player->ray[i]->xstep = TILE_SIZE / tan(-rayAngle);
+	map->player->ray[i]->xstep = TWO_D_TILE_SIZE / tan(-rayAngle);
 	// Invert rotation here
 	if (map->player->ray[i]->is_facing_left && map->player->ray[i]->xstep > 0)
 		map->player->ray[i]->xstep *= -1;
@@ -102,17 +102,17 @@ void	find_vert_intercept(t_map *map, double rayAngle, int i)
 	double	next_vert_touch_y;
 
 	// Find the x-coordinate of the closest vertical grid intersection
-	map->player->ray[i]->xint = floor(map->player->x / TILE_SIZE) * TILE_SIZE;
+	map->player->ray[i]->xint = floor(map->player->x / TWO_D_TILE_SIZE) * TWO_D_TILE_SIZE;
 	if (map->player->ray[i]->is_facing_right)
-		map->player->ray[i]->xint += TILE_SIZE;
+		map->player->ray[i]->xint += TWO_D_TILE_SIZE;
 	// Find the y-coordinate of the closest vertical grid intersection
 	map->player->ray[i]->yint = map->player->y + (map->player->ray[i]->xint
 			- map->player->x) * tan(-rayAngle); // Invert rotation here
 	// Calculate the increment map->player->ray[i]->xstep and map->player->ray[i]->ystep
-	map->player->ray[i]->xstep = TILE_SIZE;
+	map->player->ray[i]->xstep = TWO_D_TILE_SIZE;
 	if (map->player->ray[i]->is_facing_left)
 		map->player->ray[i]->xstep *= -1;
-	map->player->ray[i]->ystep = TILE_SIZE * tan(-rayAngle);
+	map->player->ray[i]->ystep = TWO_D_TILE_SIZE * tan(-rayAngle);
 	// Invert rotation here
 	if ((map->player->ray[i]->is_facing_up && map->player->ray[i]->ystep > 0)
 		|| (map->player->ray[i]->is_facing_down
@@ -132,7 +132,7 @@ void	calculate_distance(t_map *map, double rayAngle, int i)
 
 	horz_hit_distance = INT_MAX;
 	vert_hit_distance = INT_MAX;
-	if (map->player->ray[i]->found_vert_wall_hit)
+	if (map->player->ray[i]->found_horz_wall_hit)
 	{
 		horz_hit_distance = distance_between_points(map,
 				map->player->ray[i]->horz_wall_hit_x,

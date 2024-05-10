@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/01 16:41:25 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/10 02:46:38 by mahmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@
 #define FALSE 0
 #define TRUE 1
 # define TILE_SIZE 64
+# define WINDOW_WIDTH 1280
+# define WINDOW_HEIGHT 1000
+
+# define TWO_D_TILE_SIZE 10
 
 
 typedef struct s_ray
@@ -72,7 +76,8 @@ typedef struct s_map
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
-	char		map[7][7];
+	char		**map;
+	char		**map_mod;
 	int			map_width;
 	int			map_height;
 	int			window_width;
@@ -80,9 +85,32 @@ typedef struct s_map
 	int			no_of_rays;
 	int			img_width;
 	int			img_height;
-	void		*textures[2];
+	void		*textures[4];
 	t_player	*player;
 }				t_map;
+
+typedef struct s_linked_list_map
+{
+	char						*row;
+	struct s_linked_list_map	*next;
+}	t_linked_list_map;
+
+typedef struct s_parsing_map_cp
+{
+	char	**map_cp;
+	int		*num_of_elements_in_each_row;
+}	t_parsing_map_cp;
+
+typedef struct s_parsing
+{
+	int	r[2];
+	int	g[2];
+	int	b[2];
+	int	rgb[2];
+	int	wall_texture_fds[4];
+	int	main_map_row_num;
+	int	six_lines_done[6];
+}	t_parsing;
 
 #endif
 
@@ -96,3 +124,4 @@ void	wall_hit_direction(t_map *map, int i);
 void	choose_intercept(t_map *map, double vertHitDistance,
 		double horzHitDistance, int i);
 void	calculate_distance(t_map *map, double rayAngle, int i);
+void	parsing(char *file_name, t_map *map);

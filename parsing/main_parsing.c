@@ -3,49 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   main_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalkaisi <aalkaisi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 12:20:45 by aalkaisi          #+#    #+#             */
-/*   Updated: 2024/04/30 15:52:25 by aalkaisi         ###   ########.fr       */
+/*   Updated: 2024/05/10 02:41:30 by mahmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include "cub3D.h"
+#include "../cub3D.h"
 
-typedef struct s_map
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	char		**map;
-	void		*textures[4];
-	// t_player	*player;
-}				t_map;
+// typedef struct s_map
+// {
+// 	void		*mlx_ptr;
+// 	void		*win_ptr;
+// 	char		**map;
+// 	void		*textures[4];
+// 	// t_player	*player;
+// }				t_map;
 
-typedef struct s_linked_list_map
-{
-	char						*row;
-	struct s_linked_list_map	*next;
-}	t_linked_list_map;
+// typedef struct s_linked_list_map
+// {
+// 	char						*row;
+// 	struct s_linked_list_map	*next;
+// }	t_linked_list_map;
 
-typedef struct s_parsing_map_cp
-{
-	char	**map_cp;
-	int		*num_of_elements_in_each_row;
-}	t_parsing_map_cp;
+// typedef struct s_parsing_map_cp
+// {
+// 	char	**map_cp;
+// 	int		*num_of_elements_in_each_row;
+// }	t_parsing_map_cp;
 
-typedef struct s_parsing
-{
-	int	r[2];
-	int	g[2];
-	int	b[2];
-	int	rgb[2];
-	int	wall_texture_fds[4];
-	int	main_map_row_num;
-	int	six_lines_done[6];
-}	t_parsing;
+// typedef struct s_parsing
+// {
+// 	int	r[2];
+// 	int	g[2];
+// 	int	b[2];
+// 	int	rgb[2];
+// 	int	wall_texture_fds[4];
+// 	int	main_map_row_num;
+// 	int	six_lines_done[6];
+// }	t_parsing;
 
 void	printing(char **map)
 {
@@ -57,10 +57,10 @@ void	printing(char **map)
 		j = 0;
 		while (map[i][j] != '\0')
 		{
-			printf("%c", map[i][j]);
+			// printf("%c", map[i][j]);
 			j++;
 		}
-		printf("\n");
+		// printf("\n");
 		i++;
 	}
 }
@@ -183,7 +183,7 @@ void	print_linked_list(t_linked_list_map *a)
 	c = a;
 	while (c != NULL)
 	{
-		printf("%s\n", c->row);
+		// printf("%s\n", c->row);
 		c = c->next;
 	}
 }
@@ -850,7 +850,7 @@ int	check_RGB_and_conv(t_parsing *parsing)
 		return (1);
 	parsing->rgb[0] = (parsing->r[0] << 16) + (parsing->g[0] << 8) + parsing->b[0];
 	parsing->rgb[1] = (parsing->r[1] << 16) + (parsing->g[1] << 8) + parsing->b[1];
-	printf("%X, %X\n", parsing->rgb[0], parsing->rgb[1]);
+	// printf("%X, %X\n", parsing->rgb[0], parsing->rgb[1]);
 	return (0);
 }
 
@@ -885,7 +885,7 @@ void	parsing(char *file_name, t_map *map)
 		exit (1);
 	}
 	map->map = NULL;
-	printf("%d\n", parsing->main_map_row_num);
+	// printf("%d\n", parsing->main_map_row_num);
 	map->map = conv_two_d_map(linked_list_map, map->map, parsing->main_map_row_num);
 	free_map(linked_list_map);
 	if (error(map->map) == 'N')
@@ -900,28 +900,28 @@ void	parsing(char *file_name, t_map *map)
 		free(parsing);
 		exit (1);
 	}
-	printf("%d, %d, %d\n%d, %d, %d\n", parsing->r[0], parsing->g[0], parsing->b[0], parsing->r[1], parsing->g[1], parsing->b[1]);
+	// printf("%d, %d, %d\n%d, %d, %d\n", parsing->r[0], parsing->g[0], parsing->b[0], parsing->r[1], parsing->g[1], parsing->b[1]);
 	printing(map->map);
-	free_double_pointer(map->map);
-	free(parsing);
+	// free_double_pointer(map->map);
+	// free(parsing);
 }
 
-int	main(int argc, char **argv)
-{
-	t_map	map;
+// int	main(int argc, char **argv)
+// {
+// 	t_map	map;
 
-	if (argc != 2)
-		return (1);
-	parsing(argv[1], &map);
-	// data.mlx_ptr = mlx_init();
-	// if (data.mlx_ptr == NULL)
-	// {
-	// 	free_list_str(data.two_d_map);
-	// 	return (0);
-	// }
-	// data.count = 0;
-	// put_images(&data);
-	// create_window(&data);
-	// put_images_on_window(data.two_d_map, data);
-	// data.steps = 0;
-}
+// 	if (argc != 2)
+// 		return (1);
+// 	parsing(argv[1], &map);
+// 	// data.mlx_ptr = mlx_init();
+// 	// if (data.mlx_ptr == NULL)
+// 	// {
+// 	// 	free_list_str(data.two_d_map);
+// 	// 	return (0);
+// 	// }
+// 	// data.count = 0;
+// 	// put_images(&data);
+// 	// create_window(&data);
+// 	// put_images_on_window(data.two_d_map, data);
+// 	// data.steps = 0;
+// }
