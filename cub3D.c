@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/10 04:17:18 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/05/10 09:15:19 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ void move_player(t_map *map, int direction)
   
 
     // Update player position based on direction
-    if (check_wall_index(map, map->player->x + dx, map->player->y + dy) == 0)
+    if (check_wall_index(map, map->player->x + dx * 1.1, map->player->y + dy * 1.1) == 0)
     {
         map->player->x += dx;
         map->player->y += dy;
@@ -379,37 +379,62 @@ void ft_strcpy(char *dest, const char *src) {
 void replace_chars(t_map *map, int longest_line)
 {
     int i = 0;
-    while (i < map->map_height) {
-    int j = 0;
-    while (j < longest_line) {
-        // if (ft_strchr("NSEW01", map->map_mod[i][j]) == NULL) {
-        //     map->map_mod[i][j] = '1';
-        // }
-        if (map->map_mod[i][j] != 'N' && map->map_mod[i][j] != 'S' && map->map_mod[i][j] != 'E' && 
-        map->map_mod[i][j] != 'W' && map->map_mod[i][j] != '0' && map->map_mod[i][j] != '1')
-             map->map_mod[i][j] = '1';
-        j++;
-    }
+    while (i < map->map_height) 
+    {
+        int j = 0;
+        while (j < longest_line) {
+            // if (ft_strchr("NSEW01", map->map_mod[i][j]) == NULL) {
+            //     map->map_mod[i][j] = '1';
+            // }
+            if (map->map_mod[i][j] != 'N' && map->map_mod[i][j] != 'S' && map->map_mod[i][j] != 'E' && 
+            map->map_mod[i][j] != 'W' && map->map_mod[i][j] != '0' && map->map_mod[i][j] != '1')
+                map->map_mod[i][j] = '1';
+              if (map->map_mod[i][j] == 'N' || map->map_mod[i][j] == 'S' || map->map_mod[i][j] == 'E' || 
+            map->map_mod[i][j] == 'W')
+            {
+                map->player->x = j;
+                map->player->y = i;
+                map->map_mod[i][j] = '0';
+            }
+            j++;
+        }
+        // printf("%s\n", map->map_mod[i]);   
     map->map_mod[i][longest_line] = '\0';
     i++;
 }
- map->map_mod[i - 1] = NULL;
+//  map->map_mod[map->map_height - 1] = NULL;
  map->map_height -= 1;
 }
 
+// void allocate_map_mod(t_map *map, int longest_line) {
+//     map->map_mod = malloc(sizeof(char **) * map->map_height + 1);
+//     int i = 0;
+//     // int j = 0;
+//     while (i < map->map_height) {
+//         map->map_mod[i] = malloc(sizeof(char *) * longest_line + 1);
+//         ft_strcpy(map->map_mod[i], map->map[i]);
+//         // printf("%s\n", map->map_mod[i]);
+//         // j++;
+//         i++;
+//     }
+//     map->map_mod[i] = NULL;
+// }
+
 void allocate_map_mod(t_map *map, int longest_line) {
-    map->map_mod = malloc(sizeof(char **) * map->map_height + 1);
+    map->map_mod = malloc(sizeof(char **) * (map->map_height + 1)); // Allocate memory for map_height + 1 pointers
+    if (map->map_mod == NULL) {
+        // Handle allocation failure
+        return;
+    }
     int i = 0;
-    // int j = 0;
     while (i < map->map_height) {
-        map->map_mod[i] = malloc(sizeof(char *) * longest_line + 1);
+        map->map_mod[i] = malloc(sizeof(char *) * (longest_line + 1)); // Allocate memory for longest_line + 1 characters
         ft_strcpy(map->map_mod[i], map->map[i]);
-        // printf("%s\n", map->map_mod[i])
-        // j++;
         i++;
     }
-    // map->map_mod[i] = NULL;
+    map->map_mod[i] = NULL; // Set the last pointer to NULL
 }
+
 
 int find_longest_line_length(t_map *map) {
     int max_length = 0;
@@ -436,34 +461,21 @@ int	main(int ac, char **av)
 {
     t_map map;
     int longest_line;
+    int rounded_x;
+    int rounded_y;
     if (ac != 2)
 		return (1);
 	parsing(av[1], &map);
     init_values(&map);
     longest_line = find_longest_line_length(&map);
-
     allocate_map_mod(&map, longest_line);
-    
-    int i = 0;
     replace_chars(&map, longest_line);
-    while (map.map_mod[i] != NULL)
-    {
-        printf("%s\n", map.map_mod[i]);
-        i++;
-    }
     map.map = map.map_mod;
-    // int i = 0;
-    // while (map.map[i] != NULL)
-    // {
-    //     printf("%s\n", map.map[i]);
-    //     i++;
-    // }
-    // exit(1);
     assign_images(&map);
-    // printf("%d\n", map.map_width);
-    // printf("%d\n", map.map_height);
-    map.player->x = 1 * map.img_width + map.img_width / 2;
-    map.player->y = 3 * map.img_height + map.img_height / 2;
+    rounded_x = (int)map.player->x;
+    rounded_y = (int)map.player->y;
+    map.player->x = rounded_x * TWO_D_TILE_SIZE + TWO_D_TILE_SIZE / 2;
+    map.player->y = rounded_y * TWO_D_TILE_SIZE + TWO_D_TILE_SIZE / 2;
     create_minimap(&map);
     return (0);
 }
