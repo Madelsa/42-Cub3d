@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 12:20:45 by aalkaisi          #+#    #+#             */
-/*   Updated: 2024/05/10 02:41:30 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/05/10 10:38:50 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -902,6 +902,8 @@ void	parsing(char *file_name, t_map *map)
 	}
 	// printf("%d, %d, %d\n%d, %d, %d\n", parsing->r[0], parsing->g[0], parsing->b[0], parsing->r[1], parsing->g[1], parsing->b[1]);
 	printing(map->map);
+	map->rgb[0] = parsing->rgb[0];
+	map->rgb[1] = parsing->rgb[1];
 	// free_double_pointer(map->map);
 	// free(parsing);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/10 02:46:38 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/05/10 11:06:09 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 #define TRUE 1
 # define TILE_SIZE 64
 # define WINDOW_WIDTH 1280
-# define WINDOW_HEIGHT 1000
+# define WINDOW_HEIGHT 720
 
 # define TWO_D_TILE_SIZE 10
 
@@ -85,7 +85,8 @@ typedef struct s_map
 	int			no_of_rays;
 	int			img_width;
 	int			img_height;
-	void		*textures[4];
+	int			rgb[2];
+	void		*textures[6];
 	t_player	*player;
 }				t_map;
 
