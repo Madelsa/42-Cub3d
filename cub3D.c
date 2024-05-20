@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/20 13:34:26 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/20 14:02:59 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,8 +349,8 @@ void init_values(t_map *map, t_parsing *parse)
         // }
         i++;
     }
-    map->parsing = parse;
     map->player->ray[i] = NULL;
+    map->parsing = parse;
     map->player->width = 3;
     map->player->height = 3;
     map->player->turn_direction = 0;
@@ -360,14 +360,6 @@ void init_values(t_map *map, t_parsing *parse)
     map->player->turn_speed = 15 * (PI / 180);
 }
 
-void ft_strcpy(char *dest, const char *src) {
-    while (*src != '\0') {
-        *dest = *src;
-        dest++;
-        src++;
-    }
-    *dest = '\0'; 
-}
 
 void replace_chars(t_map *map, int longest_line)
 {
@@ -428,8 +420,6 @@ int find_longest_line_length(t_map *map) {
     }
     map->map_height = i;
     map->map_width = max_length;
-      printf("%d\n", map->map_width);
-    printf("%d\n", map->map_height);
     return max_length;
 }
 
