@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/20 14:29:01 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:29:38 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,51 +206,257 @@ double distance_between_points(t_map *map, double x2, double y2)
 
 
 
+// void create_3d_walls(t_map *map)
+// {
+//     int bits_per_pixel;
+//     int size_line;
+//     int endian;
+
+//     // Create an off-screen buffer
+//     void *buffer = mlx_new_image(map->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+//     // Get the address of the buffer and retrieve image data format information
+//     unsigned int *image_data = (unsigned int *)mlx_get_data_addr(buffer, &bits_per_pixel, &size_line, &endian);
+    
+//     for (int i = 0; i < map->no_of_rays; i++) {
+//         float perpDistance = map->player->ray[i]->distance * cos(map->player->ray[i]->ray_angle - map->player->rotation_angle);
+//         float distanceProjPlane = ((WINDOW_WIDTH) /2) / tan(FOV / 2);
+//         float projectedWallHeight = (TWO_D_TILE_SIZE / perpDistance) * distanceProjPlane;
+
+//         int wallStripHeight = (int)projectedWallHeight;
+
+//         int wallTopPixel = (WINDOW_HEIGHT / 2) - (wallStripHeight / 2);
+//         // printf("TOP PX: %d\n", wallStripHeight);
+//         if (wallStripHeight == 0)
+//             // printf("distance: %f\n", map->player->ray[i]->distance);
+//         wallTopPixel = wallTopPixel < 0 ? 0 : wallTopPixel;
+
+//         int wallBottomPixel = (WINDOW_HEIGHT / 2) + (wallStripHeight / 2);
+//         wallBottomPixel = wallBottomPixel > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomPixel;
+//         // printf("ray id: %d\n", i);
+//         // printf("TOP PX: %d\n", wallTopPixel);
+//         // printf("BOT PX: %d\n\n", wallBottomPixel);
+//         // Render the wall from wallTopPixel to wallBottomPixel
+//         for (int y = wallTopPixel; y < wallBottomPixel; y++) {
+//             // Store the pixel color in the off-screen buffer
+//             if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
+//                 image_data[y * WINDOW_WIDTH + i] = 0xFFFFFF; // White color
+//             }
+//         }
+//         for (int y = 0; y < wallTopPixel; y++) {
+//             // Store the pixel color in the off-screen buffer
+//             if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
+//                 image_data[y * WINDOW_WIDTH + i] = map->rgb[1]; 
+//             }
+//         }
+//         for (int y = wallBottomPixel; y < WINDOW_HEIGHT; y++) {
+//             // Store the pixel color in the off-screen buffer
+//             if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
+//                 image_data[y * WINDOW_WIDTH + i] = map->rgb[0];
+//             }
+//         }
+//     }
+
+//     // Display the off-screen buffer on the window
+//     mlx_put_image_to_window(map->mlx_ptr, map->win_ptr, buffer, 0, 0);
+
+//     // Destroy the off-screen buffer
+//     mlx_destroy_image(map->mlx_ptr, buffer);
+// }
+
+
+// void create_3d_walls(t_map *map)
+// {
+//     int bits_per_pixel, size_line, endian;
+
+//     // Load the texture
+//     int tex_width, tex_height;
+//     void *tex_image = mlx_xpm_file_to_image(map->mlx_ptr, "./textures/gold.xpm", &tex_width, &tex_height);
+//     if (!tex_image) {
+//         // Handle error
+//         return;
+//     }
+
+//     unsigned int *tex_data = (unsigned int *)mlx_get_data_addr(tex_image, &bits_per_pixel, &size_line, &endian);
+
+//     // Create an off-screen buffer
+//     void *buffer = mlx_new_image(map->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
+//     if (!buffer) {
+//         // Handle error
+//         return;
+//     }
+
+//     // Get the address of the buffer and retrieve image data format information
+//     unsigned int *image_data = (unsigned int *)mlx_get_data_addr(buffer, &bits_per_pixel, &size_line, &endian);
+    
+//     for (int i = 0; i < map->no_of_rays; i++) {
+//         float perpDistance = map->player->ray[i]->distance * cos(map->player->ray[i]->ray_angle - map->player->rotation_angle);
+//         float distanceProjPlane = (WINDOW_WIDTH / 2) / tan(FOV / 2);
+//         float projectedWallHeight = (TWO_D_TILE_SIZE / perpDistance) * distanceProjPlane;
+
+//         int wallStripHeight = (int)projectedWallHeight;
+
+//         int wallTopPixel = (WINDOW_HEIGHT / 2) - (wallStripHeight / 2);
+//         if (wallTopPixel < 0) wallTopPixel = 0;
+
+//         int wallBottomPixel = (WINDOW_HEIGHT / 2) + (wallStripHeight / 2);
+//         if (wallBottomPixel > WINDOW_HEIGHT) wallBottomPixel = WINDOW_HEIGHT;
+
+//         // Calculate the texture offset
+//         float hit_x = map->player->ray[i]->wall_hit_x; // Assuming you have this info
+//         float hit_y = map->player->ray[i]->wall_hit_y; // Assuming you have this info
+//         int tex_x;
+
+//         if (map->player->ray[i]->was_hit_vertical) {
+//             tex_x = (int)hit_y % TWO_D_TILE_SIZE;
+//         } else {
+//             tex_x = (int)hit_x % TWO_D_TILE_SIZE;
+//         }
+//         tex_x = (tex_x * tex_width) / TWO_D_TILE_SIZE; // Scale to texture width
+        
+//         if (map->player->ray[i]->is_north_wall == 1)
+//         {
+//               // Render the wall from wallTopPixel to wallBottomPixel with texture
+//         for (int y = wallTopPixel; y < wallBottomPixel; y++) {
+//             int d = y * 256 - WINDOW_HEIGHT * 128 + wallStripHeight * 128; // 256 and 128 factors to avoid floats
+//             int tex_y = ((d * tex_height) / wallStripHeight) / 256;
+//             if (tex_y < 0) tex_y = 0;
+//             if (tex_y >= tex_height) tex_y = tex_height - 1;
+
+//             if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
+//                 image_data[y * WINDOW_WIDTH + i] = tex_data[tex_y * tex_width + tex_x];
+//             }
+//         }
+//         }
+      
+
+//         // Render the ceiling
+//         for (int y = 0; y < wallTopPixel; y++) {
+//             if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
+//                 image_data[y * WINDOW_WIDTH + i] = map->rgb[1];
+//             }
+//         }
+
+//         // Render the floor
+//         for (int y = wallBottomPixel; y < WINDOW_HEIGHT; y++) {
+//             if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
+//                 image_data[y * WINDOW_WIDTH + i] = map->rgb[0];
+//             }
+//         }
+//     }
+
+//     // Display the off-screen buffer on the window
+//     mlx_put_image_to_window(map->mlx_ptr, map->win_ptr, buffer, 0, 0);
+
+//     // Destroy the off-screen buffer
+//     mlx_destroy_image(map->mlx_ptr, buffer);
+
+//     // Destroy the texture
+//     mlx_destroy_image(map->mlx_ptr, tex_image);
+// }
+
+
 void create_3d_walls(t_map *map)
 {
-    int bits_per_pixel;
-    int size_line;
-    int endian;
+    int bits_per_pixel, size_line, endian;
+
+    // Load the textures
+    int tex_width[4], tex_height[4];
+    void *tex_images[4];
+    tex_images[0] = mlx_xpm_file_to_image(map->mlx_ptr, "./textures/diamond.xpm", &tex_width[0], &tex_height[0]);
+    tex_images[1] = mlx_xpm_file_to_image(map->mlx_ptr, "./textures/gold.xpm", &tex_width[1], &tex_height[1]);
+    tex_images[2] = mlx_xpm_file_to_image(map->mlx_ptr, "./textures/brick.xpm", &tex_width[2], &tex_height[2]);
+    tex_images[3] = mlx_xpm_file_to_image(map->mlx_ptr, "./textures/metal.xpm", &tex_width[3], &tex_height[3]);
+    
+    // Check for errors in loading textures
+    for (int t = 0; t < 4; t++) {
+        if (!tex_images[t]) {
+            // Handle error
+            for (int j = 0; j < t; j++) {
+                mlx_destroy_image(map->mlx_ptr, tex_images[j]);
+            }
+            return;
+        }
+    }
+
+    // Get texture data addresses
+    unsigned int *tex_datas[4];
+    for (int t = 0; t < 4; t++) {
+        tex_datas[t] = (unsigned int *)mlx_get_data_addr(tex_images[t], &bits_per_pixel, &size_line, &endian);
+    }
 
     // Create an off-screen buffer
     void *buffer = mlx_new_image(map->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
+    if (!buffer) {
+        // Handle error
+        for (int t = 0; t < 4; t++) {
+            mlx_destroy_image(map->mlx_ptr, tex_images[t]);
+        }
+        return;
+    }
 
     // Get the address of the buffer and retrieve image data format information
     unsigned int *image_data = (unsigned int *)mlx_get_data_addr(buffer, &bits_per_pixel, &size_line, &endian);
     
     for (int i = 0; i < map->no_of_rays; i++) {
         float perpDistance = map->player->ray[i]->distance * cos(map->player->ray[i]->ray_angle - map->player->rotation_angle);
-        float distanceProjPlane = ((WINDOW_WIDTH) /2) / tan(FOV / 2);
+        float distanceProjPlane = (WINDOW_WIDTH / 2) / tan(FOV / 2);
         float projectedWallHeight = (TWO_D_TILE_SIZE / perpDistance) * distanceProjPlane;
 
         int wallStripHeight = (int)projectedWallHeight;
 
         int wallTopPixel = (WINDOW_HEIGHT / 2) - (wallStripHeight / 2);
-        // printf("TOP PX: %d\n", wallStripHeight);
-        if (wallStripHeight == 0)
-            // printf("distance: %f\n", map->player->ray[i]->distance);
-        wallTopPixel = wallTopPixel < 0 ? 0 : wallTopPixel;
+        if (wallTopPixel < 0) wallTopPixel = 0;
 
         int wallBottomPixel = (WINDOW_HEIGHT / 2) + (wallStripHeight / 2);
-        wallBottomPixel = wallBottomPixel > WINDOW_HEIGHT ? WINDOW_HEIGHT : wallBottomPixel;
-        // printf("ray id: %d\n", i);
-        // printf("TOP PX: %d\n", wallTopPixel);
-        // printf("BOT PX: %d\n\n", wallBottomPixel);
-        // Render the wall from wallTopPixel to wallBottomPixel
+        if (wallBottomPixel > WINDOW_HEIGHT) wallBottomPixel = WINDOW_HEIGHT;
+
+        // Calculate the texture offset
+        float hit_x = map->player->ray[i]->wall_hit_x; // Assuming you have this info
+        float hit_y = map->player->ray[i]->wall_hit_y; // Assuming you have this info
+        int tex_x, tex_index;
+
+        if (map->player->ray[i]->was_hit_vertical) {
+            tex_x = (int)hit_y % TWO_D_TILE_SIZE;
+        } else {
+            tex_x = (int)hit_x % TWO_D_TILE_SIZE;
+        }
+        tex_x = (tex_x * tex_width[0]) / TWO_D_TILE_SIZE; // Scale to texture width
+
+        // Determine texture index based on wall direction
+        if (map->player->ray[i]->is_north_wall) {
+            tex_index = 0; // North wall texture
+        } else if (map->player->ray[i]->is_south_wall) {
+            tex_index = 1; // South wall texture
+        } else if (map->player->ray[i]->is_east_wall) {
+            tex_index = 2; // East wall texture
+        } else if (map->player->ray[i]->is_west_wall) {
+            tex_index = 3; // West wall texture
+        } else {
+            tex_index = 0; // Default to north wall texture
+        }
+
+        // Render the wall from wallTopPixel to wallBottomPixel with texture
         for (int y = wallTopPixel; y < wallBottomPixel; y++) {
-            // Store the pixel color in the off-screen buffer
+            int d = y * 256 - WINDOW_HEIGHT * 128 + wallStripHeight * 128; // 256 and 128 factors to avoid floats
+            int tex_y = ((d * tex_height[tex_index]) / wallStripHeight) / 256;
+            if (tex_y < 0) tex_y = 0;
+            if (tex_y >= tex_height[tex_index]) tex_y = tex_height[tex_index] - 1;
+
             if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
-                image_data[y * WINDOW_WIDTH + i] = 0xFFFFFF; // White color
+                image_data[y * WINDOW_WIDTH + i] = tex_datas[tex_index][tex_y * tex_width[tex_index] + tex_x];
             }
         }
+
+        // Render the ceiling
         for (int y = 0; y < wallTopPixel; y++) {
-            // Store the pixel color in the off-screen buffer
             if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
-                image_data[y * WINDOW_WIDTH + i] = map->rgb[1]; 
+                image_data[y * WINDOW_WIDTH + i] = map->rgb[1];
             }
         }
+
+        // Render the floor
         for (int y = wallBottomPixel; y < WINDOW_HEIGHT; y++) {
-            // Store the pixel color in the off-screen buffer
             if (i >= 0 && i < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT) {
                 image_data[y * WINDOW_WIDTH + i] = map->rgb[0];
             }
@@ -262,7 +468,13 @@ void create_3d_walls(t_map *map)
 
     // Destroy the off-screen buffer
     mlx_destroy_image(map->mlx_ptr, buffer);
+
+    // Destroy the textures
+    for (int t = 0; t < 4; t++) {
+        mlx_destroy_image(map->mlx_ptr, tex_images[t]);
+    }
 }
+
 
 
 int perform_action(int keycode, t_map *map)
