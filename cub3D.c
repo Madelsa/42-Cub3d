@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/20 14:02:59 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/20 14:29:01 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ void create_3d_walls(t_map *map)
     
     for (int i = 0; i < map->no_of_rays; i++) {
         float perpDistance = map->player->ray[i]->distance * cos(map->player->ray[i]->ray_angle - map->player->rotation_angle);
-        float distanceProjPlane = (WINDOW_WIDTH) / tan(FOV / 2);
+        float distanceProjPlane = ((WINDOW_WIDTH) /2) / tan(FOV / 2);
         float projectedWallHeight = (TWO_D_TILE_SIZE / perpDistance) * distanceProjPlane;
 
         int wallStripHeight = (int)projectedWallHeight;
