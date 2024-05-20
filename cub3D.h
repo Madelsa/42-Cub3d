@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/10 11:06:09 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:24:50 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,17 @@ typedef struct s_player
 	t_ray		**ray;
 }				t_player;
 
+typedef struct s_parsing
+{
+	int	r[2];
+	int	g[2];
+	int	b[2];
+	int	rgb[2];
+	int	wall_texture_fds[4];
+	int	main_map_row_num;
+	int	six_lines_done[6];
+}	t_parsing;
+
 typedef struct s_map
 {
 	void		*mlx_ptr;
@@ -87,6 +98,7 @@ typedef struct s_map
 	int			img_height;
 	int			rgb[2];
 	void		*textures[6];
+	t_parsing 	*parsing;
 	t_player	*player;
 }				t_map;
 
@@ -102,16 +114,6 @@ typedef struct s_parsing_map_cp
 	int		*num_of_elements_in_each_row;
 }	t_parsing_map_cp;
 
-typedef struct s_parsing
-{
-	int	r[2];
-	int	g[2];
-	int	b[2];
-	int	rgb[2];
-	int	wall_texture_fds[4];
-	int	main_map_row_num;
-	int	six_lines_done[6];
-}	t_parsing;
 
 #endif
 
@@ -125,4 +127,6 @@ void	wall_hit_direction(t_map *map, int i);
 void	choose_intercept(t_map *map, double vertHitDistance,
 		double horzHitDistance, int i);
 void	calculate_distance(t_map *map, double rayAngle, int i);
-void	parsing(char *file_name, t_map *map);
+t_parsing	*parsing(char *file_name, t_map *map);
+void	free_double_pointer(char **line);
+

@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 12:20:45 by aalkaisi          #+#    #+#             */
-/*   Updated: 2024/05/10 10:38:50 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:26:52 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -854,7 +854,7 @@ int	check_RGB_and_conv(t_parsing *parsing)
 	return (0);
 }
 
-void	parsing(char *file_name, t_map *map)
+t_parsing	*parsing(char *file_name, t_map *map)
 {
 	int					fd;
 	t_linked_list_map	*linked_list_map;
@@ -906,7 +906,8 @@ void	parsing(char *file_name, t_map *map)
 	map->rgb[1] = parsing->rgb[1];
 	// free_double_pointer(map->map);
 	// free(parsing);
-}
+	return (parsing);
+}	
 
 // int	main(int argc, char **argv)
 // {

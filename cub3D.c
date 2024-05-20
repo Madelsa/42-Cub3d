@@ -6,12 +6,36 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/10 11:29:14 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:34:26 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
+
+void free_all(t_map *map)
+{
+    int i;
+
+    i = 0;
+    while (map->player->ray[i] != NULL) 
+    {
+        free(map->player->ray[i]);
+        i++;
+    }
+    free(map->player->ray);
+    map->player->ray = NULL;
+    i = 0;
+    while (map->map_mod[i] != NULL) {
+        free(map->map_mod[i]);
+        i++;
+    }
+    free(map->map_mod);
+    map->map_mod = NULL;
+    free(map->player);
+	free(map->parsing);
+    map->player = NULL;
+}
 
 void draw_map(t_map *map)
 {
@@ -78,24 +102,19 @@ void assign_images(t_map *map)
             "./textures/red_brick.xpm", &map->img_width, &map->img_height);
     if (map->textures[0] == NULL || map->textures[1] == NULL || map->textures[2] == NULL
          || map->textures[3] == NULL || map->textures[4] == NULL || map->textures[5] == NULL)
-        exit(1);
+        exit(1);//free and exit
 }
 
 
 int destroy_window(t_map *map)
 {
+    free_all(map);
     mlx_destroy_window(map->mlx_ptr, map->win_ptr);
     exit(0);
 }
 
 void normalize_angle(double *angle) 
 {
-    // while (*angle < 0) {
-    //     *angle += TWO_PI;
-    // }
-    // while (*angle >= TWO_PI) {
-    //     *angle -= TWO_PI;
-    // }
     *angle = remainder(*angle, TWO_PI);
     if (*angle < 0)
         *angle += TWO_PI; 
@@ -177,45 +196,7 @@ void move_player(t_map *map, int direction)
 
 }
 
-void draw_line_rays(t_map *map, double x1, double y1) {
-    int x0 = map->player->x;  
-    int y0 = map->player->y;  
-    
-    int dx = x1 - x0;  
-    int dy = y1 - y0;  
-    int steps;
 
-    if (abs(dy) > abs(dx)) {  
-        steps = abs(dy);  
-    } else {
-        steps = abs(dx);  
-    }
-
-    double x_increment = dx / (double)steps;  
-    double y_increment = dy / (double)steps; 
-
-    double y = y0;  
-    double x = x0;  
-
-    int i = 0;
-    while (i <= steps) {
-        mlx_pixel_put(map->mlx_ptr, map->win_ptr, (int)x, (int)y, 0xFF0000);  
-        y += y_increment;  
-        x += x_increment; 
-        i++;
-    }
-}
-
-void render_rays(t_map *map)
-{
-    int i = 0;
-
-    while (i < map->no_of_rays)
-    {
-        draw_line_rays(map, map->player->ray[i]->wall_hit_x, map->player->ray[i]->wall_hit_y);
-        i++;
-    }
-}
 
 double distance_between_points(t_map *map, double x2, double y2)
 {
@@ -233,10 +214,6 @@ void create_3d_walls(t_map *map)
 
     // Create an off-screen buffer
     void *buffer = mlx_new_image(map->mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);
-    if (!buffer) {
-        // Handle error
-        return;
-    }
 
     // Get the address of the buffer and retrieve image data format information
     unsigned int *image_data = (unsigned int *)mlx_get_data_addr(buffer, &bits_per_pixel, &size_line, &endian);
@@ -352,33 +329,28 @@ void create_minimap(t_map *map)
 
 
 
-void init_values(t_map *map)
+void init_values(t_map *map, t_parsing *parse)
 {
+    // (void)parse;
     map->mlx_ptr = mlx_init();
     if (map->mlx_ptr == NULL)
         exit(EXIT_FAILURE);
-    // map->map_height = 30;
-    // map->map_width = 30;
     map->img_height = 10;
     map->img_width = 10;
-    map->player = ft_calloc(sizeof(t_player), 1);
+    map->player = malloc(sizeof(t_player) * 1);
     map->no_of_rays = WINDOW_WIDTH; //ray per how many pixels;
-    map->player->ray = malloc(sizeof(t_ray *) * map->no_of_rays); // Allocate memory for the array of t_ray pointers
-    if (map->player->ray == NULL) {
-        // Handle memory allocation failure
-        exit(EXIT_FAILURE);
-    }
+    map->player->ray = malloc(sizeof(t_ray *) * (map->no_of_rays + 1)); // Allocate memory for the array of t_ray pointers
     int i = 0;
     while (i < map->no_of_rays) {
         map->player->ray[i] = malloc(sizeof(t_ray)); // Allocate memory for each t_ray struct
-        if (map->player->ray[i] == NULL) {
-            // Handle memory allocation failure
-            exit(EXIT_FAILURE);
-        }
+        // if (map->player->ray[i] == NULL) {
+        //     // Handle memory allocation failure
+        //     exit(EXIT_FAILURE);
+        // }
         i++;
     }
-    map->player->x = map->map_width / 2;  //update later starting pos
-    map->player->y = map->map_height / 2; //update later starting pos
+    map->parsing = parse;
+    map->player->ray[i] = NULL;
     map->player->width = 3;
     map->player->height = 3;
     map->player->turn_direction = 0;
@@ -427,19 +399,6 @@ void replace_chars(t_map *map, int longest_line)
  map->map_height -= 1;
 }
 
-// void allocate_map_mod(t_map *map, int longest_line) {
-//     map->map_mod = malloc(sizeof(char **) * map->map_height + 1);
-//     int i = 0;
-//     // int j = 0;
-//     while (i < map->map_height) {
-//         map->map_mod[i] = malloc(sizeof(char *) * longest_line + 1);
-//         ft_strcpy(map->map_mod[i], map->map[i]);
-//         // printf("%s\n", map->map_mod[i]);
-//         // j++;
-//         i++;
-//     }
-//     map->map_mod[i] = NULL;
-// }
 
 void allocate_map_mod(t_map *map, int longest_line) {
     map->map_mod = malloc(sizeof(char **) * (map->map_height + 1)); // Allocate memory for map_height + 1 pointers
@@ -476,27 +435,27 @@ int find_longest_line_length(t_map *map) {
 
 
 
-
-
 int	main(int ac, char **av)
 {
     t_map map;
+    t_parsing *parse;
     int longest_line;
     int rounded_x;
     int rounded_y;
     if (ac != 2)
 		return (1);
-	parsing(av[1], &map);
-    init_values(&map);
+	parse = parsing(av[1], &map);
+    init_values(&map, parse);
     longest_line = find_longest_line_length(&map);
     allocate_map_mod(&map, longest_line);
     replace_chars(&map, longest_line);
+    free_double_pointer(map.map);
     map.map = map.map_mod;
     assign_images(&map);
     rounded_x = (int)map.player->x;
     rounded_y = (int)map.player->y;
-    map.player->x = rounded_x * TWO_D_TILE_SIZE + TWO_D_TILE_SIZE / 2;
-    map.player->y = rounded_y * TWO_D_TILE_SIZE + TWO_D_TILE_SIZE / 2;
+    map.player->x = rounded_x * TWO_D_TILE_SIZE + (int)(TWO_D_TILE_SIZE / 2);
+    map.player->y = rounded_y * TWO_D_TILE_SIZE + (int)(TWO_D_TILE_SIZE / 2);
     create_minimap(&map);
     return (0);
 }
