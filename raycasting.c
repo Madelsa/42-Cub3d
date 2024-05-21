@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:23:40 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/10 03:40:17 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/05/21 16:47:52 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	horizontal_intercept_loop(t_map *map, int i, double next_horz_touch_x,
 			y_check -= 1;
 		if (check_wall_index(map, x_check, y_check))
 		{
-			// found a wall hit
 			map->player->ray[i]->horz_wall_hit_x = next_horz_touch_x;
 			map->player->ray[i]->horz_wall_hit_y = next_horz_touch_y;
 			map->player->ray[i]->found_horz_wall_hit = 1;
@@ -56,7 +55,6 @@ void	vertical_intercept_loop(t_map *map, int i, double next_vert_touch_x,
 			x_check -= 1;
 		if (check_wall_index(map, x_check, y_check))
 		{
-			// found a wall hit
 			map->player->ray[i]->vert_wall_hit_x = next_vert_touch_x;
 			map->player->ray[i]->vert_wall_hit_y = next_vert_touch_y;
 			map->player->ray[i]->found_vert_wall_hit = 1;
@@ -75,18 +73,16 @@ void	find_horz_intercept(t_map *map, double rayAngle, int i)
 	double	next_horz_touch_x;
 	double	next_horz_touch_y;
 
-	map->player->ray[i]->yint = floor(map->player->y / TWO_D_TILE_SIZE) * TWO_D_TILE_SIZE;
+	map->player->ray[i]->yint = floor(map->player->y / TWO_D_TILE_SIZE)
+		* TWO_D_TILE_SIZE;
 	if (map->player->ray[i]->is_facing_down)
 		map->player->ray[i]->yint += TWO_D_TILE_SIZE;
-	// Find the x-coordinate of the closest horizontal grid intersection
 	map->player->ray[i]->xint = map->player->x + (map->player->ray[i]->yint
-			- map->player->y) / tan(-rayAngle); // Invert rotation here
-	// Calculate the increment xstep and ystep
+			- map->player->y) / tan(-rayAngle);
 	map->player->ray[i]->ystep = TWO_D_TILE_SIZE;
 	if (map->player->ray[i]->is_facing_up)
 		map->player->ray[i]->ystep *= -1;
 	map->player->ray[i]->xstep = TWO_D_TILE_SIZE / tan(-rayAngle);
-	// Invert rotation here
 	if (map->player->ray[i]->is_facing_left && map->player->ray[i]->xstep > 0)
 		map->player->ray[i]->xstep *= -1;
 	if (map->player->ray[i]->is_facing_right && map->player->ray[i]->xstep < 0)
@@ -101,29 +97,24 @@ void	find_vert_intercept(t_map *map, double rayAngle, int i)
 	double	next_vert_touch_x;
 	double	next_vert_touch_y;
 
-	// Find the x-coordinate of the closest vertical grid intersection
-	map->player->ray[i]->xint = floor(map->player->x / TWO_D_TILE_SIZE) * TWO_D_TILE_SIZE;
+	map->player->ray[i]->xint = floor(map->player->x / TWO_D_TILE_SIZE)
+		* TWO_D_TILE_SIZE;
 	if (map->player->ray[i]->is_facing_right)
 		map->player->ray[i]->xint += TWO_D_TILE_SIZE;
-	// Find the y-coordinate of the closest vertical grid intersection
 	map->player->ray[i]->yint = map->player->y + (map->player->ray[i]->xint
-			- map->player->x) * tan(-rayAngle); // Invert rotation here
-	// Calculate the increment map->player->ray[i]->xstep and map->player->ray[i]->ystep
+			- map->player->x) * tan(-rayAngle);
 	map->player->ray[i]->xstep = TWO_D_TILE_SIZE;
 	if (map->player->ray[i]->is_facing_left)
 		map->player->ray[i]->xstep *= -1;
 	map->player->ray[i]->ystep = TWO_D_TILE_SIZE * tan(-rayAngle);
-	// Invert rotation here
 	if ((map->player->ray[i]->is_facing_up && map->player->ray[i]->ystep > 0)
 		|| (map->player->ray[i]->is_facing_down
 			&& map->player->ray[i]->ystep < 0))
 		map->player->ray[i]->ystep *= -1;
 	next_vert_touch_x = map->player->ray[i]->xint;
 	next_vert_touch_y = map->player->ray[i]->yint;
-	// Increment map->player->ray[i]->xstep and map->player->ray[i]->ystep until we find a wall
 	vertical_intercept_loop(map, i, next_vert_touch_x, next_vert_touch_y);
 }
-
 
 void	calculate_distance(t_map *map, double rayAngle, int i)
 {

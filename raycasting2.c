@@ -3,22 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalkaisi <aalkaisi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 16:38:11 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/20 11:59:11 by aalkaisi         ###   ########.fr       */
+/*   Updated: 2024/05/21 16:48:00 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-
 void	ray_inits(t_map *map, double rayAngle, int i)
 {
-	map->player->ray[i]->is_facing_up = rayAngle > 0 && rayAngle < PI;
+	map->player->ray[i]->is_facing_up = rayAngle > 0 && rayAngle < M_PI;
 	map->player->ray[i]->is_facing_down = !map->player->ray[i]->is_facing_up;
-	map->player->ray[i]->is_facing_left = rayAngle > PI / 2 && rayAngle < (3
-			* PI) / 2;
+	map->player->ray[i]->is_facing_left = rayAngle > M_PI / 2 && rayAngle < (3
+			* M_PI) / 2;
 	map->player->ray[i]->is_facing_right = !map->player->ray[i]->is_facing_left;
 	map->player->ray[i]->vert_wall_hit_x = 0;
 	map->player->ray[i]->vert_wall_hit_y = 0;
@@ -81,14 +80,14 @@ void	cast_all_rays(t_map *map)
 	double	ray_angle;
 	int		i;
 
-	ray_angle = map->player->rotation_angle + (FOV / 2);
+	ray_angle = map->player->rotation_angle + (map->player->fov / 2);
 	map->window_width = map->map_width * TWO_D_TILE_SIZE;
 	map->window_height = map->map_height * TWO_D_TILE_SIZE;
 	i = 0;
 	while (i < map->no_of_rays)
 	{
 		cast_ray(map, ray_angle, i);
-		ray_angle -= FOV / map->no_of_rays ;
+		ray_angle -= map->player->fov / map->no_of_rays ;
 		i++;
 	}
 }
