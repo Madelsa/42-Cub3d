@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalkaisi <aalkaisi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/10 14:07:44 by aalkaisi         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:24:50 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 # define TILE_SIZE 64
 # define WINDOW_WIDTH 1280
 # define WINDOW_HEIGHT 720
-# define TEXTURE_SIZE 720
 
 # define TWO_D_TILE_SIZE 10
 
@@ -57,7 +56,7 @@ typedef struct s_ray
 	int is_west_wall;
 	int found_horz_wall_hit;
 	int found_vert_wall_hit;
-}	t_ray;
+}				t_ray;
 
 typedef struct s_player
 {
@@ -71,7 +70,18 @@ typedef struct s_player
 	double		walk_speed;
 	double		turn_speed;
 	t_ray		**ray;
-}	t_player;
+}				t_player;
+
+typedef struct s_parsing
+{
+	int	r[2];
+	int	g[2];
+	int	b[2];
+	int	rgb[2];
+	int	wall_texture_fds[4];
+	int	main_map_row_num;
+	int	six_lines_done[6];
+}	t_parsing;
 
 typedef struct s_map
 {
@@ -88,8 +98,9 @@ typedef struct s_map
 	int			img_height;
 	int			rgb[2];
 	void		*textures[6];
+	t_parsing 	*parsing;
 	t_player	*player;
-}	t_map;
+}				t_map;
 
 typedef struct s_linked_list_map
 {
@@ -103,16 +114,6 @@ typedef struct s_parsing_map_cp
 	int		*num_of_elements_in_each_row;
 }	t_parsing_map_cp;
 
-typedef struct s_parsing
-{
-	int	r[2];
-	int	g[2];
-	int	b[2];
-	int	rgb[2];
-	int	wall_texture_fds[4];
-	int	main_map_row_num;
-	int	six_lines_done[6];
-}	t_parsing;
 
 #endif
 
@@ -126,5 +127,6 @@ void	wall_hit_direction(t_map *map, int i);
 void	choose_intercept(t_map *map, double vertHitDistance,
 		double horzHitDistance, int i);
 void	calculate_distance(t_map *map, double rayAngle, int i);
-void	parsing(char *file_name, t_map *map);
-int 	assign_images(t_map *map, t_parsing *parsing);
+t_parsing	*parsing(char *file_name, t_map *map);
+void	free_double_pointer(char **line);
+

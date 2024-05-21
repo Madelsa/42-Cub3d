@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aalkaisi <aalkaisi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 16:38:11 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/01 16:43:05 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/20 11:59:11 by aalkaisi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,14 @@ void	cast_all_rays(t_map *map)
 	double	ray_angle;
 	int		i;
 
-	ray_angle = map->player->rotation_angle - (FOV / 2);
-	map->window_width = map->map_width * TILE_SIZE;
-	map->window_height = map->map_height * TILE_SIZE;
+	ray_angle = map->player->rotation_angle + (FOV / 2);
+	map->window_width = map->map_width * TWO_D_TILE_SIZE;
+	map->window_height = map->map_height * TWO_D_TILE_SIZE;
 	i = 0;
 	while (i < map->no_of_rays)
 	{
 		cast_ray(map, ray_angle, i);
-		printf("Ray ID: %d Wall Hit: %d %d% d% d\n", i,
-				map->player->ray[i]->is_north_wall,
-				map->player->ray[i]->is_south_wall,
-				map->player->ray[i]->is_east_wall,
-				map->player->ray[i]->is_west_wall);
-		ray_angle += FOV / map->no_of_rays;
+		ray_angle -= FOV / map->no_of_rays ;
 		i++;
 	}
 }

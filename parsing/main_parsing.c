@@ -6,46 +6,46 @@
 /*   By: aalkaisi <aalkaisi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 12:20:45 by aalkaisi          #+#    #+#             */
-/*   Updated: 2024/04/30 15:52:25 by aalkaisi         ###   ########.fr       */
+/*   Updated: 2024/05/10 14:28:02 by aalkaisi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include "cub3D.h"
+#include "../cub3D.h"
 
-typedef struct s_map
-{
-	void		*mlx_ptr;
-	void		*win_ptr;
-	char		**map;
-	void		*textures[4];
-	// t_player	*player;
-}				t_map;
+// typedef struct s_map
+// {
+// 	void		*mlx_ptr;
+// 	void		*win_ptr;
+// 	char		**map;
+// 	void		*textures[4];
+// 	// t_player	*player;
+// }				t_map;
 
-typedef struct s_linked_list_map
-{
-	char						*row;
-	struct s_linked_list_map	*next;
-}	t_linked_list_map;
+// typedef struct s_linked_list_map
+// {
+// 	char						*row;
+// 	struct s_linked_list_map	*next;
+// }	t_linked_list_map;
 
-typedef struct s_parsing_map_cp
-{
-	char	**map_cp;
-	int		*num_of_elements_in_each_row;
-}	t_parsing_map_cp;
+// typedef struct s_parsing_map_cp
+// {
+// 	char	**map_cp;
+// 	int		*num_of_elements_in_each_row;
+// }	t_parsing_map_cp;
 
-typedef struct s_parsing
-{
-	int	r[2];
-	int	g[2];
-	int	b[2];
-	int	rgb[2];
-	int	wall_texture_fds[4];
-	int	main_map_row_num;
-	int	six_lines_done[6];
-}	t_parsing;
+// typedef struct s_parsing
+// {
+// 	int	r[2];
+// 	int	g[2];
+// 	int	b[2];
+// 	int	rgb[2];
+// 	int	wall_texture_fds[4];
+// 	int	main_map_row_num;
+// 	int	six_lines_done[6];
+// }	t_parsing;
 
 void	printing(char **map)
 {
@@ -57,10 +57,10 @@ void	printing(char **map)
 		j = 0;
 		while (map[i][j] != '\0')
 		{
-			printf("%c", map[i][j]);
+			// printf("%c", map[i][j]);
 			j++;
 		}
-		printf("\n");
+		// printf("\n");
 		i++;
 	}
 }
@@ -183,7 +183,7 @@ void	print_linked_list(t_linked_list_map *a)
 	c = a;
 	while (c != NULL)
 	{
-		printf("%s\n", c->row);
+		// printf("%s\n", c->row);
 		c = c->next;
 	}
 }
@@ -659,24 +659,24 @@ void	free_double_pointer(char **line)
 	free(line);
 }
 
-int	read_wall_texture_block_2(int wall_direction, char **line, t_parsing *parsing)
+int	read_wall_texture_block_2(int wall_direction, char **line, t_parsing *parsing, t_map *map)
 {
 	if (line[1] != NULL && line[2] == NULL && wall_direction == 2 
 		&& parsing->six_lines_done[2] == 0)
 	{
-		parsing->wall_texture_fds[2] = open(line[1], O_RDONLY);
-		if (parsing->wall_texture_fds[2] < 0)
-			return (write(1, "Error\nThere is no texture with this name\n", 41)
-				, 1);
+		map->textures[4] = mlx_xpm_file_to_image(map->mlx_ptr, 
+			line[1], &map->img_width, &map->img_height);
+		if (map->textures[4] == NULL)
+			return (write(1, "Error\nNo texture with this name\n", 32), 1);
 		parsing->six_lines_done[2] = 1;
 	}
 	else if (line[1] != NULL && line[2] == NULL && wall_direction == 3 
 		&& parsing->six_lines_done[3] == 0)
 	{
-		parsing->wall_texture_fds[3] = open(line[1], O_RDONLY);
-		if (parsing->wall_texture_fds[3] < 0)
-			return (write(1, "Error\nThere is no texture with this name\n", 41)
-				, 1);
+		map->textures[5] = mlx_xpm_file_to_image(map->mlx_ptr, 
+			line[1], &map->img_width, &map->img_height);
+		if (map->textures[5] == NULL)
+			return (write(1, "Error\nNo texture with this name\n", 41), 1);
 		parsing->six_lines_done[3] = 1;
 	}
 	else
@@ -684,29 +684,31 @@ int	read_wall_texture_block_2(int wall_direction, char **line, t_parsing *parsin
 	return (0);
 }
 
-int	read_wall_texture(int wall_direction, char **line, t_parsing *parsing)
+int	read_wall_texture(int wall_direction, char **line, t_parsing *parsing, t_map *map)
 {
+	map->img_height = 720;
+    map->img_width = 720;
 	if (line[1] != NULL && line[2] == NULL && wall_direction == 0 
 		&& parsing->six_lines_done[0] == 0)
 	{
-		parsing->wall_texture_fds[0] = open(line[1], O_RDONLY);
-		if (parsing->wall_texture_fds[0] < 0)
-			return (write(1, "Error\nThere is no texture with this name\n", 41)
-				, 1);
+		map->textures[2] = mlx_xpm_file_to_image(map->mlx_ptr, 
+			line[1], &map->img_width, &map->img_height);
+		if (map->textures[2] == NULL)
+			return (write(1, "Error\nNo texture with this name\n", 32), 1);
 		parsing->six_lines_done[0] = 1;
 	}
 	else if (line[1] != NULL && line[2] == NULL && wall_direction == 1 
 		&& parsing->six_lines_done[1] == 0)
 	{
-		parsing->wall_texture_fds[1] = open(line[1], O_RDONLY);
-		if (parsing->wall_texture_fds[1] < 0)
-			return (write(1, "Error\nThere is no texture with this name\n", 41)
-				, 1);
+		map->textures[3] = mlx_xpm_file_to_image(map->mlx_ptr, 
+			line[1], &map->img_width, &map->img_height);
+		if (map->textures[3] == NULL)
+			return (write(1, "Error\nNo texture with this name\n", 32), 1);
 		parsing->six_lines_done[1] = 1;
 	}
 	else
 	{
-		if (read_wall_texture_block_2(wall_direction, line, parsing) == 1)
+		if (read_wall_texture_block_2(wall_direction, line, parsing, map) == 1)
 			return (1);
 	}
 	return (0);
@@ -778,7 +780,7 @@ int	save_colors(int line_type, char **line, t_parsing *parsing)
 	return (0);
 }
 
-int	load_textures_and_colors(t_linked_list_map	*linked_list_map, t_parsing *parsing)
+int	load_textures_and_colors(t_linked_list_map	*linked_list_map, t_parsing *parsing, t_map *map)
 {
 	// int					i;
 	t_linked_list_map	*temp_map;
@@ -800,22 +802,22 @@ int	load_textures_and_colors(t_linked_list_map	*linked_list_map, t_parsing *pars
 			line[0] = NULL;
 		else if (line[0][0] == 'S' && line[0][1] == 'O' && line[0][2] == '\0')
 		{
-			if (read_wall_texture(0, line, parsing) == 1)
+			if (read_wall_texture(0, line, parsing, map) == 1)
 				return (free_double_pointer(line), 1);
 		}
 		else if (line[0][0] == 'N' && line[0][1] == 'O' && line[0][2] == '\0')
 		{
-			if (read_wall_texture(1, line, parsing) == 1)
+			if (read_wall_texture(1, line, parsing, map) == 1)
 				return (free_double_pointer(line), 1);
 		}
 		else if (line[0][0] == 'E' && line[0][1] == 'A' && line[0][2] == '\0')
 		{
-			if (read_wall_texture(2, line, parsing) == 1)
+			if (read_wall_texture(2, line, parsing, map) == 1)
 				return (free_double_pointer(line), 1);
 		}
 		else if (line[0][0] == 'W' && line[0][1] == 'E' && line[0][2] == '\0')
 		{
-			if (read_wall_texture(3, line, parsing) == 1)
+			if (read_wall_texture(3, line, parsing, map) == 1)
 				return (free_double_pointer(line), 1);
 		}
 		else if (line[0][0] == 'F' && line[0][1] == '\0')
@@ -850,8 +852,33 @@ int	check_RGB_and_conv(t_parsing *parsing)
 		return (1);
 	parsing->rgb[0] = (parsing->r[0] << 16) + (parsing->g[0] << 8) + parsing->b[0];
 	parsing->rgb[1] = (parsing->r[1] << 16) + (parsing->g[1] << 8) + parsing->b[1];
-	printf("%X, %X\n", parsing->rgb[0], parsing->rgb[1]);
+	// printf("%X, %X\n", parsing->rgb[0], parsing->rgb[1]);
 	return (0);
+}
+
+void	free_textures(t_map *map)
+{
+	int	i;
+
+	i = 0;
+	while (i < 7)
+	{
+		if (map->textures[i] != NULL)
+			mlx_destroy_image(map->mlx_ptr, map->textures[i]);
+		i++;
+	}
+}
+
+void	assign_null_to_textures(t_map *map)
+{
+	int	i;
+
+	i = 0;
+	while (i < 7)
+	{
+		map->textures[i] = NULL;
+		i++;
+	}
 }
 
 void	parsing(char *file_name, t_map *map)
@@ -860,6 +887,7 @@ void	parsing(char *file_name, t_map *map)
 	t_linked_list_map	*linked_list_map;
 	t_parsing			*parsing;
 
+	assign_null_to_textures(map);
 	if (check_extension(file_name) == 0)
 	{
 		write(1, "Error\nWrong file extension\n", 27);
@@ -877,51 +905,63 @@ void	parsing(char *file_name, t_map *map)
 	linked_list_map = trim_map(linked_list_map);
 	parsing = malloc(sizeof(t_parsing));
 	if (parsing == NULL)
+	{
 		exit (1);
-	if (load_textures_and_colors(linked_list_map, parsing) == 1)
+	}
+	if (load_textures_and_colors(linked_list_map, parsing, map) == 1)
 	{
 		free_map(linked_list_map);
 		free(parsing);
+		free_textures(map);
 		exit (1);
 	}
 	map->map = NULL;
-	printf("%d\n", parsing->main_map_row_num);
+	// printf("%d\n", parsing->main_map_row_num);
 	map->map = conv_two_d_map(linked_list_map, map->map, parsing->main_map_row_num);
 	free_map(linked_list_map);
 	if (error(map->map) == 'N')
 	{
 		free_list_str(map->map);
 		free(parsing);
+		free_textures(map);
 		exit (1);
 	}
 	if (check_RGB_and_conv(parsing) == 1)
 	{
 		free_list_str(map->map);
 		free(parsing);
+		free_textures(map);
 		exit (1);
 	}
-	printf("%d, %d, %d\n%d, %d, %d\n", parsing->r[0], parsing->g[0], parsing->b[0], parsing->r[1], parsing->g[1], parsing->b[1]);
+	// printf("%d, %d, %d\n%d, %d, %d\n", parsing->r[0], parsing->g[0], parsing->b[0], parsing->r[1], parsing->g[1], parsing->b[1]);
 	printing(map->map);
-	free_double_pointer(map->map);
+	if (assign_images(map, parsing) == 1)
+	{
+		free_list_str(map->map);
+		free(parsing);
+		free_textures(map);
+		exit (1);
+	}
+	// free_double_pointer(map->map);
 	free(parsing);
 }
 
-int	main(int argc, char **argv)
-{
-	t_map	map;
+// int	main(int argc, char **argv)
+// {
+// 	t_map	map;
 
-	if (argc != 2)
-		return (1);
-	parsing(argv[1], &map);
-	// data.mlx_ptr = mlx_init();
-	// if (data.mlx_ptr == NULL)
-	// {
-	// 	free_list_str(data.two_d_map);
-	// 	return (0);
-	// }
-	// data.count = 0;
-	// put_images(&data);
-	// create_window(&data);
-	// put_images_on_window(data.two_d_map, data);
-	// data.steps = 0;
-}
+// 	if (argc != 2)
+// 		return (1);
+// 	parsing(argv[1], &map);
+// 	// data.mlx_ptr = mlx_init();
+// 	// if (data.mlx_ptr == NULL)
+// 	// {
+// 	// 	free_list_str(data.two_d_map);
+// 	// 	return (0);
+// 	// }
+// 	// data.count = 0;
+// 	// put_images(&data);
+// 	// create_window(&data);
+// 	// put_images_on_window(data.two_d_map, data);
+// 	// data.steps = 0;
+// }
