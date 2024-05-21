@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 16:05:47 by a0ec6397          #+#    #+#             */
-/*   Updated: 2024/01/04 20:15:46 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/21 15:03:19 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
 unsigned int		ft_putnbr(int n);
 int					ft_strcmp(const char *s1, const char *s2);
+void				ft_strcpy(char *dest, const char *src);
 int					ft_printf(const char *str, ...);
 unsigned int		ft_put_char(int c);
 unsigned int		ft_put_string(char *str);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalkaisi <aalkaisi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/10 14:07:44 by aalkaisi         ###   ########.fr       */
+/*   Updated: 2024/05/21 15:34:34 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,12 +114,11 @@ typedef struct s_parsing
 	int	six_lines_done[6];
 }	t_parsing;
 
-#endif
 
-void normalize_angle(double *angle);
-double distance_between_points(t_map *map, double x2, double y2);
-int check_wall_index(t_map *map, double x, double y);
-void cast_all_rays(t_map *map);
+void	normalize_angle(double *angle);
+double 	distance_between_points(t_map *map, double x2, double y2);
+int 	check_wall_index(t_map *map, double x, double y);
+void 	cast_all_rays(t_map *map);
 void	find_horz_intercept(t_map *map, double rayAngle, int i);
 void	find_vert_intercept(t_map *map, double rayAngle, int i);
 void	wall_hit_direction(t_map *map, int i);
@@ -128,3 +127,8 @@ void	choose_intercept(t_map *map, double vertHitDistance,
 void	calculate_distance(t_map *map, double rayAngle, int i);
 void	parsing(char *file_name, t_map *map);
 int 	assign_images(t_map *map, t_parsing *parsing);
+void 	draw_map(t_map *map);
+void 	draw_player(t_map *map);
+void 	draw_line(t_map *map);
+
+#endif
