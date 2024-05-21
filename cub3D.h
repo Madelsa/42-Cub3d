@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/21 18:15:10 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/21 20:07:52 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,15 @@ typedef struct s_player
 	double						turn_speed;
 	t_ray						**ray;
 }								t_player;
+
+typedef struct s_save_colors
+{
+	int							i;
+	int							j;
+	char						num_type;
+	int							got_a_num;
+	int							k;
+}								t_save_colors;
 
 typedef struct s_map_3d
 {
@@ -130,30 +139,67 @@ typedef struct s_parsing
 	int							six_lines_done[6];
 }								t_parsing;
 
-void	normalize_angle(double *angle);
-double	distance_between_points(t_map *map, double x2, double y2);
-int		check_wall_index(t_map *map, double x, double y);
-void	cast_all_rays(t_map *map);
-void	find_horz_intercept(t_map *map, double rayAngle, int i);
-void	find_vert_intercept(t_map *map, double rayAngle, int i);
-void	wall_hit_direction(t_map *map, int i);
-void	choose_intercept(t_map *map, double vertHitDistance,
-			double horzHitDistance, int i);
-void	calculate_distance(t_map *map, double rayAngle, int i);
-void	parsing(char *file_name, t_map *map);
-int		assign_images(t_map *map, t_parsing *parsing);
-void	draw_map(t_map *map);
-void	draw_player(t_map *map);
-void	draw_line(t_map *map);
-void	free_all(t_map *map);
-int		destroy_window(t_map *map);
-void	replace_chars(t_map *map, int longest_line);
-void	allocate_map_mod(t_map *map, int longest_line);
-int		find_longest_line_length(t_map *map);
-void	create_3d_walls(t_map *map);
-int		perform_action(int keycode, t_map *map);
-void	create_minimap(t_map *map);
-void	init_values(t_map *map);
-void	create_3d_walls(t_map *map);
+void							normalize_angle(double *angle);
+double							distance_between_points(t_map *map, double x2,
+									double y2);
+int								check_wall_index(t_map *map, double x,
+									double y);
+void							cast_all_rays(t_map *map);
+void							find_horz_intercept(t_map *map, double rayAngle,
+									int i);
+void							find_vert_intercept(t_map *map, double rayAngle,
+									int i);
+void							wall_hit_direction(t_map *map, int i);
+void							choose_intercept(t_map *map,
+									double vertHitDistance,
+									double horzHitDistance, int i);
+void							calculate_distance(t_map *map, double rayAngle,
+									int i);
+void							parsing(char *file_name, t_map *map);
+int								assign_images(t_map *map, t_parsing *parsing);
+void							draw_map(t_map *map);
+void							draw_player(t_map *map);
+void							draw_line(t_map *map);
+void							free_all(t_map *map);
+int								destroy_window(t_map *map);
+void							replace_chars(t_map *map, int longest_line);
+void							allocate_map_mod(t_map *map, int longest_line);
+int								find_longest_line_length(t_map *map);
+void							create_3d_walls(t_map *map);
+int								perform_action(int keycode, t_map *map);
+void							create_minimap(t_map *map);
+void							init_values(t_map *map);
+void							create_3d_walls(t_map *map);
+char							**conv_two_d_map(t_linked_list_map *map,
+									char **two_d_map, int main_map_row_num);
+char							error(char **two_d_map);
+int								is_valid(char **two_d_map);
+t_parsing_map_cp				*map_copy(char **two_d_map);
+void							free_list_str(char **two_d_map);
+void							free_textures(t_map *map);
+int								check_rgb_and_conv(t_parsing *parsing);
+void							assign_null_to_textures(t_map *map);
+void							check_extension(char *file_name);
+int								is_reachable(char **two_d_map);
+int								open_file(char *file_name);
+t_linked_list_map				*building_map(
+									t_linked_list_map *linked_list_map, int fd);
+void							building_map_block2(
+									t_linked_list_map **linked_list_map,
+									t_linked_list_map *new_row,
+									t_linked_list_map **last_row,
+									int i);
+t_linked_list_map				*trim_map(t_linked_list_map *linked_list_map);
+void							free_map(t_linked_list_map *a);
+int								load_textures_and_colors(
+									t_linked_list_map *linked_list_map,
+									t_parsing *parsing,	t_map *map);
+void							free_double_pointer(char **line);
+void							empty_map(int fd);
+void							six_lines_done_and_rgb_init(t_parsing *parsing);
+int								is_available(char **two_d_map);
+int								save_colors(int line_type, char **line,
+									t_parsing *parsing);
+void							index_player(char **map_cp, int *row, int *col);
 
 #endif

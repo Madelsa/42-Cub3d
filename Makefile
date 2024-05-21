@@ -6,12 +6,14 @@
 #    By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/30 14:15:00 by mabdelsa          #+#    #+#              #
-#    Updated: 2024/05/21 17:59:03 by mabdelsa         ###   ########.fr        #
+#    Updated: 2024/05/21 20:01:02 by mabdelsa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC	=	./cub3D.c ./raycasting.c ./raycasting2.c ./parsing/main_parsing.c ./draw.c \
 		./free_memory.c ./map_modifications.c ./player_actions.c ./inits.c ./create_3d.c \
+		./parsing/colors.c ./parsing/dup_map_p_index.c ./parsing/is_valid_map2.c ./parsing/map.c \
+		./parsing/others.c ./parsing/textures.c ./parsing/is_valid_map.c \
 
 NAME = cub3D
 RM = rm -f

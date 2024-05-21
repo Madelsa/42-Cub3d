@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalkaisi <aalkaisi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:28:07 by aalkaisi          #+#    #+#             */
-/*   Updated: 2024/05/21 19:28:22 by aalkaisi         ###   ########.fr       */
+/*   Updated: 2024/05/21 20:19:22 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,9 @@ char	**conv_two_d_map(t_linked_list_map *map, char **two_d_map,
 	int					i;
 
 	temp_map = map;
-	i = 0;
-	while (i < main_map_row_num)
-	{
+	i = -1;
+	while (++i < main_map_row_num)
 		temp_map = temp_map->next;
-		i++;
-	}
 	temp_map2 = temp_map;
 	i = 0;
 	while (temp_map != NULL)

@@ -1,8 +1,0 @@
-typedef struct s_save_colors
-{
-	int		i;
-	int		j;
-	char	num_type;
-	int		got_a_num;
-	int		k;
-}	t_save_colors;
