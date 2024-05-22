@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   others.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aalkaisi <aalkaisi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 19:39:49 by aalkaisi          #+#    #+#             */
-/*   Updated: 2024/05/21 19:40:13 by aalkaisi         ###   ########.fr       */
+/*   Updated: 2024/05/22 15:05:20 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	free_textures(t_map *map)
 	int	i;
 
 	i = 0;
-	while (i < 7)
+	while (i < 6)
 	{
 		if (map->textures[i] != NULL)
 			mlx_destroy_image(map->mlx_ptr, map->textures[i]);
@@ -46,7 +46,7 @@ void	assign_null_to_textures(t_map *map)
 	int	i;
 
 	i = 0;
-	while (i < 7)
+	while (i < 6)
 	{
 		map->textures[i] = NULL;
 		i++;

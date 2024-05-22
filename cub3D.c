@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:16 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/21 17:50:00 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/22 14:32:35 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	main(int ac, char **av)
 	map.mlx_ptr = mlx_init();
 	if (map.mlx_ptr == NULL)
 		return (1);
+	map.img_height = 64;
+	map.img_width = 64;
 	parsing(av[1], &map);
 	init_values(&map);
 	longest_line = find_longest_line_length(&map);
