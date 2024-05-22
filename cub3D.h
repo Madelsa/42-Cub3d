@@ -6,7 +6,7 @@
 /*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 14:21:39 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/05/21 20:07:52 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/05/22 12:36:14 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # define TILE_SIZE 64
 # define WINDOW_WIDTH 1280
 # define WINDOW_HEIGHT 720
-# define TEXTURE_SIZE 720
 # define TWO_D_TILE_SIZE 10
 
 typedef struct s_ray

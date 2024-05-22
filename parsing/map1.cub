@@ -1,12 +1,12 @@
 
-NO ./textures_2/diamond.xpm
+NO ./textures_2/test3.xpm
          C  215,100           ,0
-     SO ./textures_2/gold.xpm
-WE     ./textures_2/brick.xpm
+     SO ./textures_2/test2.xpm
+WE     ./textures_2/test.xpm
 F 0   ,    0,      244
 
 
-EA ./textures_2/metal.xpm
+EA ./textures_2/test4.xpm
 
   1111111111111111111111111    1
 111000000000110000000000001  1 101
